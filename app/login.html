@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="../node_modules/normalize.css/normalize.css">
+    <link rel="stylesheet" href="../src/styles/index.scss">
+  </head>
+<body>
+  <div class="container">
+        <aside class="menu">
+          <div class="menu-item">
+            <label for="prepare">PREPARE</label>
+            <input type="text" id="prepare" value="0002" data-inputmask="'mask': '99:99'">
+          </div>
+          <div class="menu-item">
+            <label for="work">WORK</label>
+            <input type="text" id="work" value="0003" data-inputmask="'mask': '99:99'">
+          </div>
+          <div class="menu-item">
+            <label for="rest">REST</label>
+            <input type="text" id="rest" value="0002" data-inputmask="'mask': '99:99'">
+          </div>
+          <div class="menu-item">
+            <label for="sets">SETS</label>
+            <input type="text" id="sets" value="3" data-inputmask="'mask': '9[9][9]', 'greedy': false, 'clearMaskOnLostFocus': true">
+          </div>
+          <div class="menu-item">
+            <label for="cycles">CYCLES</label>
+            <input type="text" id="cycles" value="1" data-inputmask="'mask': '9[9][9]', 'greedy': false, 'clearMaskOnLostFocus': true">
+          </div>
+          <div class="menu-item">
+            <label for="sets-beep">SETS BEEP</label>
+            <button type="button" id="sets-beep" class="on">ON</button>
+          </div>
+          <div class="menu-item">
+            <label for="tick-beep">TICK BEEP</label>
+            <button type="button" id="tick-beep" class="on">ON</button>
+          </div>
+          <div class="menu-item">
+            <label for="3s-beep">3S BEEP</label>
+            <button type="button" id="3s-beep" class="on">ON</button>
+          </div>
+        </aside>
+
+    <main class="content">
+      <div class="main-title" id="main-title">PREPARE</div>
+      <div class="main-timer" id="main-timer">00:00</div>
+
+      <div class="info-wrapper">
+        <div class="column">
+          <span class="title">SETS</span>
+          <span class="count" id="sets-count">0</span>
+        </div>
+        <div class="column">
+          <span class="title">CYCLES</span>
+          <span class="count" id="cycles-count">0</span>
+        </div>
+        <div class="column">
+          <span class="title">TIME</span>
+          <span class="count" id="time-count">00:00</span>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="action-button start-button" id='start-button'>START</button>
+        <button type="button" class="hidden action-button stop-button" id='stop-button'>STOP</button>
+      </div>
+
+      <div class="progress-bar">
+          <span class="tip">Tip: hit space to start/stop</span>
+      </div>
+    </main>
+
+  </div>
+  <script> require ('../src/javascript/index.js')</script>
+</body>
+</html>

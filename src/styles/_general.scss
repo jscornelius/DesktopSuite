@@ -1,0 +1,32 @@
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('../../app/assets/fonts/Roboto-Regular.woff') format('woff2');
+}
+
+.hidden {
+  display: none !important;
+}
+
+html,
+body {
+  font-family: $defaultFont;
+  margin: 0;
+  height: 100%;
+  font-size: $baseFontSize;
+  color: $textColor;
+}
+textarea,
+input,
+button {
+  outline: none;
+  font-family: $defaultFont;
+  color: $textHighlightColor;
+}
+button {
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+}

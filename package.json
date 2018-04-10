@@ -1,0 +1,71 @@
+{
+  "name": "DesktopSuite",
+  "version": "2.0.0",
+  "description": "",
+  "main": "./src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "devtron": "^1.4.0",
+    "electron-forge": "^5.1.1",
+    "electron-prebuilt-compile": "1.8.4",
+    "electron-reload": "^1.2.2"
+  },
+  "dependencies": {
+    "countdown": "^2.6.0",
+    "electron-compile": "^6.4.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "howler": "^2.0.9",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "inputmask": "^3.3.11",
+    "jquery": "^3.3.1",
+    "moment": "^2.22.0",
+    "normalize.css": "^8.0.0",
+    "npm": "^5.8.0",
+    "request": "^2.85.0",
+    "underscore": "^1.8.3",
+    "xml2js": "^0.4.19"
+  },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "hello_world"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "helloworld"
+      }
+    }
+  }
+}

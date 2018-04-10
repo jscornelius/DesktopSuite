@@ -1,0 +1,49 @@
+.menu {
+  flex-basis: rem-calc(280px);
+  flex-shrink: 0;
+  background-image: $defaultGradient;
+  border-right: 1px solid $defaultBorderColor;
+}
+.menu-item {
+  background-image: $defaultGradient;
+  border-bottom: 1px solid $defaultBorderColor;
+  width: 100%;
+  height: rem-calc(64px);
+
+  label {
+    display: inline-block;
+    font-size: rem-calc(20px);
+    margin-top: rem-calc(20px);
+    margin-left: rem-calc(15px);
+  }
+  input[type=text],
+  button {
+    float: right;
+    margin-top: rem-calc(12px);
+    margin-right: rem-calc(15px);
+    width: rem-calc(70px);
+    height: rem-calc(30px);
+    background-color: #272931;
+    border: 1px solid $defaultBorderColor;
+    border-radius: 2px;
+    font-size: rem-calc(22px);
+    line-height: rem-calc(22px);
+    text-align: center;
+  }
+  input[type=text]{
+    &.invalid{
+      border: 1px solid red;
+    }
+  }
+  button {
+    width: rem-calc(75px);
+    margin-top: rem-calc(15px);
+
+    &.on {
+      color: #4BFFBD;
+    }
+    &.off {
+      color: #8A3535;
+    }
+  }
+}
