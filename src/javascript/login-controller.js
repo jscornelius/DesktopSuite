@@ -31,6 +31,7 @@ export function doLogin(loginname,password,callbackfunction){
         callbackfunction(false,this);
     })
     .fail(function() {
+console.log("login failed");
         this.isUserLoggedIn = false;
         callbackfunction(true,this);
     })

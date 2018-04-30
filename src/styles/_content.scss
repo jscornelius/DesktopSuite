@@ -1,84 +1,144 @@
+/*.box {
+        background-color: #f00;
+        color: #fff;
+        border-radius: 2px;
+}
+.box .box{
+        background-color: #0f0;
+}
+.box .box .box{
+        background-color: #00f;
+}
+.box .box .goose{
+        background-color: #e0f;
+}
+.box .box .box .box{
+        background-color: #ada;
+}
+.box .box .box .goose{
+        background-color: #aaa;
+}
+*/
 .content {
-  flex-grow: 1;
-  background-color: #272931;
-  //align-items: center;
- //justify-content: center;
-  text-align: center;
-  //position: relative;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 3fr;
+    background-color: #272931;
+    grid-gap: rem-calc($padding);
 
-  .login-group{
-      flex-grow: 1;
-      align-items: center;
-      justify-content: center;
-      margin-top: rem-calc(150px);
-      .login{
-          align-items: center;
-          justify-content: center;
-          //padding-right: rem-calc(5px);
-          width: 100%;
-          margin-top: rem-calc(25px);
-          label {
-              display: inline-block;
-              font-size: rem-calc(20px);
-              //margin-top: rem-calc(20px);
-            margin-right: rem-calc(15px);
-          }
-          input[type=text],input[type=password]{
-          //float: right;
-              margin-top: rem-calc(12px);
-              margin-right: rem-calc(15px);
-              //width: rem-calc();
-              height: rem-calc(30px);
-              background-color: #272931;
-              border: 2px solid $defaultBorderColor;
-              border-radius: 2px;
-              font-size: rem-calc(22px);
-              line-height: rem-calc(22px);
-              text-align: center;
-          }
-          input[type=text],input[type=password]{
-            &.invalid{
-              border: 1px solid red;
-            }
-          }
-      }
-    }
+    --breakdownRowNum: 6;
 
-    .data-group{
-        flex-grow: 1;
-        align-items: center;
+
+    //justify-content:center;
+    .cmail-group{
+        grid-row: 1;
+        display: grid;
+        align-items:center;
+        //align-content: center;
         justify-content: center;
-        margin-top: rem-calc(150px);
-        .data{
+        justify-items: center;
+
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr;
+
+        font-size: $dataFontSize;
+        margin-top: rem-calc($padding);
+        margin-left: rem-calc($padding);
+        margin-right: rem-calc($padding);
+        background-color: $defaultBorderColor;
+        border-radius: 5px;
+
+        .groupheader{
+            //font-size: rem-calc(25px);
+        }
+        .cmail-data{
+            grid-column:col 1 /  2;
+            display: grid;
+
             align-items: center;
+            align-content: center;
             justify-content: center;
-            //padding-right: rem-calc(5px);
+            justify-items: center;
+
+            font-size: $dataFontSize;
             width: 100%;
-            margin-top: rem-calc(25px);
-            label {
-            display: inline-block;
-            font-size: rem-calc(20px);
-            //margin-top: rem-calc(20px);
-            margin-right: rem-calc(15px);
+            height: 100%;
+
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 3fr;
+
+            .cmailcountlabel{
+                grid-column:1;
+                grid-row: 1;
+            }
+            .newcountlabel{
+                grid-column:2;
+                grid-row: 1;}
+            .cmailcountvalue{
+                //font-size: rem-calc(25px);
+                grid-column:1;
+                grid-row: 2;
+            }
+            .newcountvalue{
+                //font-size: rem-calc(25px);
+                grid-column:2;
+                grid-row: 2;
             }
         }
-      }
+    }
+    .breakdown-group{
+//        width:100%;
+//        height:100%;
+        grid-row: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: repeat(--breakdownRowNum,auto);
 
-  .buttons {
-    margin-top: rem-calc(60px);
-    text-align: center;
-  }
-  .action-button {
-    background: $defaultGradient;
-    width: rem-calc(145px);
-    height: rem-calc(45px);
-    font-size: rem-calc(20px);
-    border: 0;
-    border-radius: 3px;
-    color: $textHighlightColor;
-  }
-  .login-button {
-    background: $highlightColor;
-    //color: #1D4A39;
-  }
+        margin-bottom: rem-calc($padding);
+        margin-left: rem-calc($padding);
+        margin-right: rem-calc($padding);
+        grid-gap: rem-calc($padding);
+        padding: rem-calc($padding);
+        border-radius: 5px;
+
+        align-items: center;
+        background-color: $defaultBorderColor;
+        font-size: $dataFontSize;
+
+        .sectiontitle{
+            justify-self: right;
+            grid-column: 1;
+        }
+        .countvalue{
+            //font-size: rem-calc(25px);
+            justify-self: center;
+            grid-column: 2;
+        }
+        .newvalue{
+            //font-size: rem-calc(25px);
+            justify-self: center;
+            grid-column: 3;
+        }
+
+        .row1{
+            grid-row:1;
+        }
+        .row2{
+            grid-row:2;
+        }
+        .row3{
+            grid-row:3;
+        }
+        .row4{
+            grid-row:4;
+        }
+        .row5{
+            grid-row:5;
+        }
+        .row6{
+            grid-row:6;
+        }
+    }
 }

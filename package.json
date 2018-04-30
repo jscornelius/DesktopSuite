@@ -54,7 +54,7 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "hello_world"
+        "name": "DesktopSuite"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
@@ -64,7 +64,7 @@
       },
       "windowsStoreConfig": {
         "packageName": "",
-        "name": "helloworld"
+        "name": "DesktopSuite"
       }
     }
   }

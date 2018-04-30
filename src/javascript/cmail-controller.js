@@ -14,10 +14,7 @@ export function getCMailCount(loginname,password,callbackfunction){
     $.post(this.url,requestData,function(data){
         })
         .done(function(data) {
-//var cc = $.parseXML(new XMLSerializer().serializeToString(data.documentElement));
-//console.log(cc);
             var $xml = $( $.parseXML(new XMLSerializer().serializeToString(data.documentElement)) );
-
             this.CMails = $xml.find("cmail");
 //console.log("array of CMail:",this.CMails);
 
@@ -27,6 +24,5 @@ export function getCMailCount(loginname,password,callbackfunction){
             callbackfunction(true,this);
         })
         .always(function() {
-//console.log("always do this thing");
     });
 }

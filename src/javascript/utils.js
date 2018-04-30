@@ -21,6 +21,7 @@ export function formatDisplayTime(time) {
  */
 export function sendNotification(body) {
   new Notification('Breakdown Services Desktop Suite', { body });
+  console.log(body);
 }
 
 function zeroPad(string) {
