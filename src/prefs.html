@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Preferences</title>
+        <link rel="stylesheet" href="../node_modules/normalize.css/normalize.css">
+        <link rel="stylesheet" href="../src/styles/index.scss">
+    </head>
+    <body>
+        <div class="container">
+            <div class="prefs-content">
+                <div class="checkboxes">
+                    <div class="alert-all-checkbox hidden">
+                        <input type="checkbox" class="mastercheckbox"  id="alert-all-cb"> All Breakdowns </input>
+                    </div>
+                    <div class="alert-commercial-checkbox">
+                        <input type="checkbox" class="showcheckbox"  id="alert-commercial-cb"> Commercials</input>
+                    </div>
+                    <div class="alert-theatrical-checkbox">
+                        <input type="checkbox" class="showcheckbox"  id="alert-theatrical-cb"> Theatrical</input>
+                    </div>
+                    <div class="alert-stage-checkbox">
+                        <input type="checkbox" class="showcheckbox"  id="alert-stage-cb"> Stage</input>
+                    </div>
+                    <div class="alert-print-checkbox hidden">
+                        <input type="checkbox" class="showcheckbox"  id="alert-print-cb"> Print</input>
+                    </div>
+                    <div class="alert-other-checkbox hidden">
+                        <input type="checkbox" class="showcheckbox"  id="alert-other-cb"> Other</input>
+                    </div>
+                </div>
+<!--                <div class="buttons">
+                    <button type="button" class="action-button save-button" id='save-button'>Save</button>
+                </div>-->
+            </div>
+        </div>
+        <script> require ('../src/javascript/prefs.js')</script>
+    </body>
+</html>

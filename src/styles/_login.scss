@@ -1,0 +1,76 @@
+.login {
+    background-color: #272931;
+    width: 100%;
+    height:100%;
+
+    .message {
+        //position: absolute;
+        padding-top: 10px;
+        padding-left: 10px;
+        width: 70%;
+        height: 10px;
+    }
+
+    .login-fields{
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 20px;
+        padding: 20px;
+        align-items: center;
+
+        //background-color: #fcf;
+
+        //text-align: left;
+        label{
+//text-align: right;
+        }
+        input{
+            background-color: #272931;
+            border: 2px solid $defaultBorderColor;
+            border-radius: 2px;
+            height: rem-calc(25px);
+            width: 100%;
+            align-items: center;
+            text-align: left;
+        }
+        input[type=text],input[type=password]{
+            &.invalid{
+                border: 2px solid red;
+            }
+        }
+    }
+    .login-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 20px;
+        padding: 20px;
+        align-items: center;
+        justify-items: center;
+
+        .login-button{
+            grid-column:2;
+            grid-row: 1 / span 2;
+
+            background: $defaultGradient;
+            width: rem-calc(120px);
+            height: rem-calc(35px);
+            border: 0;
+            border-radius: 3px;
+            color: $textHighlightColor;
+            background: $highlightColor;
+        }
+        .login-checkbox{
+            grid-column:1;
+            grid-row:1;
+        }
+        .login-forgot{
+            grid-column:1;
+            grid-row:2;
+            color: $textColor;
+        }
+    }
+
+
+}

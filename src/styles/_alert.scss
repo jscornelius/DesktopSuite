@@ -1,0 +1,25 @@
+.login {
+    background-color: #272931;
+    width: 100%;
+    height:100%;
+
+    .message {
+        //position: absolute;
+        padding-top: 10px;
+        padding-left: 10px;
+        width: 70%;
+        height: 10px;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 20px;
+        padding: 20px;
+        align-items: center;
+        justify-items: center;
+    }
+
+
+}

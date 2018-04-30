@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Breakdown Services Desktop Suite</title>
+        <link rel="stylesheet" href="../node_modules/normalize.css/normalize.css">
+        <link rel="stylesheet" href="../src/styles/index.scss">
+    </head>
+    <body>
+<!--    <div class="container"> -->
+        <div class="content">
+            <div class="cmail-group">
+                <div class="groupheader">
+                    <label id="CMainGroupHeader">CMail:</label>
+                </div>
+
+                <div class="cmail-data">
+                    <div class="cmailcountlabel"><label>unread:</label></div>
+                    <div class="cmailcountvalue"><label id="CMailCount">0</label></div>
+                    <div class="newcountlabel"><label>new:</label></div>
+                    <div class="newcountvalue"><label id="newCMailCount">0</label></div>
+                </div>
+            </div>
+
+<!--            <div class="breakdown-group hidden" id="breakdown-group"> -->
+            <div class="breakdown-group" id="breakdown-group">
+                    <div class="sectiontitle row1">
+                        <label>Breakdowns:</label>
+                    </div>
+                    <div class="countvalue row1">
+                        <label id="breakdownCount">0</label>
+                    </div>
+                    <div class="newvalue row1">
+                        <label id="BreakdownNew">0</label>
+                    </div>
+
+                    <div class="sectiontitle row2">
+                        <label id="T1Type">Commercial:</label>
+                    </div>
+                    <div class="countvalue row2">
+                        <label id="CommercialCount">0</label>
+                    </div>
+                    <div class="newvalue row2">
+                        <label id="CommercialNew">0</label>
+                    </div>
+
+                    <div class="sectiontitle row3">
+                        <label id="T2Type">Theatrical:</label>
+                    </div>
+                    <div class="countvalue row3">
+                        <label id="TheatricalCount">0</label>
+                    </div>
+                    <div class="newvalue row3">
+                        <label id="TheatricalNew">0</label>
+                    </div>
+
+                    <div class="sectiontitle row4">
+                        <label id="T3Type">Stage:</label>
+                    </div>
+                    <div class="countvalue row4">
+                        <label id="StageCount">0</label>
+                    </div>
+                    <div class="newvalue row4">
+                        <label id="StageNew">0</label>
+                    </div>
+
+                    <div class="sectiontitle row5">
+                        <label id="T4Type">Print:</label>
+                    </div>
+                    <div class="countvalue row5">
+                        <label id="PrintCount">0</label>
+                    </div>
+                    <div class="newvalue row5">
+                        <label id="PrintNew">0</label>
+                    </div>
+
+                    <div class="sectiontitle row6">
+                        <label id="T5Type">Other:</label>
+                    </div>
+                    <div class="countvalue row6">
+                        <label id="OtherCount">0</label>
+                    </div>
+                    <div class="newvalue row6">
+                        <label id="OtherNew">0</label>
+                    </div>
+
+            </div>
+        </div>
+    <script> require ('../src/javascript/index.js')</script>
+    </body>
+</html>
