@@ -2,7 +2,7 @@ const $ = require('jquery');
 
 export function init(url){
     this.isUserLoggedIn = false;
-    this.getCmail = false;
+    this.getCMail = false;
     this.getBreakdowns = false;
     this.username = "";
     this.url = url;
@@ -17,11 +17,11 @@ export function doLogin(loginname,password,callbackfunction){
     })
     .done(function(data) {
         var $xml = $( $.parseXML(new XMLSerializer().serializeToString(data.documentElement)) );
-        this.getCmail = ($xml.find("cmail")[0].textContent === '1');
+        this.getCMail = ($xml.find("cmail")[0].textContent === '1');
         this.getBreakdowns = ($xml.find("breakdowns")[0].textContent === '1');
 
         // if getCmail and getBreakdowns are both 0 then this login failed
-        if ((this.getCmail === false) && (this.getBreakdowns === false)){
+        if ((this.getCMail === false) && (this.getBreakdowns === false)){
             this.isUserLoggedIn = false;
             this.username = "";
         }else {

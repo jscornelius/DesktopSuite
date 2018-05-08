@@ -1,5 +1,5 @@
 .login {
-    background-color: #272931;
+    background-color: $defaultBackground;
     width: 100%;
     height:100%;
 
@@ -18,16 +18,11 @@
         grid-gap: 20px;
         padding: 20px;
         align-items: center;
-
-        //background-color: #fcf;
-
-        //text-align: left;
-        label{
-//text-align: right;
-        }
+        font-size: $dataFontSize;
         input{
-            background-color: #272931;
+            background-color: $defaultBackground;
             border: 2px solid $defaultBorderColor;
+            font-size: $dataFontSize;
             border-radius: 2px;
             height: rem-calc(25px);
             width: 100%;
@@ -48,18 +43,20 @@
         padding: 20px;
         align-items: center;
         justify-items: center;
+        font-size: $dataFontSize;
 
         .login-button{
             grid-column:2;
             grid-row: 1 / span 2;
 
+            font-size: $dataFontSize;
             background: $defaultGradient;
             width: rem-calc(120px);
             height: rem-calc(35px);
             border: 0;
             border-radius: 3px;
             color: $textHighlightColor;
-            background: $highlightColor;
+            background: $buttonGradient;
         }
         .login-checkbox{
             grid-column:1;

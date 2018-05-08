@@ -1,35 +1,78 @@
 
 const $ = require('jquery');
+const path = require('path');
+const fs = require('fs');
+const moment = require('moment');
 
 var Breakdowns = {};
 var breakdownDetails = [];
+var myurl;
 
 export function init(url){
-    this.url = url;
+    myurl = url;
 }
 
-function bDetails(id,type,summary,name,date,title){
+function bd(id,type,summary,name,date,title,viewed){
     this.breakdown_id = id;
     this.breakdown_type=type;
     this.breakdown_type_summary=summary;
     this.casting_director_display_name=name;
     this.date_published=date;
     this.title=title;
+    this.viewed=viewed;
+
+}
+
+function writeBreakdownDetailsToLocalStorage(){
+    breakdownDetails.sort((a, b) => (a.date_published < b.date_published) ? 1 : ((a.date_published > b.date_published) ? -1 : 0));
+    localStorage.setItem('breakdownDetails', JSON.stringify(breakdownDetails));
+}
+
+function readBreakdownDetails(getFromDate){
+    var bd;
+    //var datepublished;
+    //var d;
+    var comparedate;
+
+    if (localStorage.getItem('breakdownDetails') == null ){return;}
+
+    breakdownDetails = JSON.parse(localStorage.getItem('breakdownDetails'));
+    for (bd of breakdownDetails){
+        //datepublished = bd.date_published;
+        //d = moment(bd.date_publishe);
+        comparedate = moment(bd.date_published).format("MM/DD/YYYY");
+
+        if (comparedate != getFromDate){
+            breakdownDetails = [];
+            return;
+        }
+        else {
+            return;
+        }
+    }
 }
 
 export function getBreakdownList(loginname,password,getFromDate,callbackfunction){
+    getBreakdownWebservice(loginname,password,getFromDate,callbackfunction);
+//    getBreakdownTestFromFile(loginname,password,getFromDate,callbackfunction);
+}
+
+
+function getBreakdownWebservice(loginname,password,getFromDate,callbackfunction){
     var xmlstring = "<desktopsuite><credentials><uid>" + loginname + "</uid><pwd>" + password + "</pwd></credentials><pub_date>" + getFromDate + "</pub_date></desktopsuite>";
     var requestData = encodeURIComponent(xmlstring);
-    var details;
+    var detailFromWebservice;
 
     requestData = "XMLData=" + requestData;
 
-    $.post(this.url,requestData,function(data){
+    $.post(myurl,requestData,function(data){
         })
         .done(function(data) {
             var $xml = $( $.parseXML(new XMLSerializer().serializeToString(data.documentElement)) );
             Breakdowns = $xml.find("breakdown");
-            breakdownDetails = [];
+
+            // read breakdowndetails from the localstorage
+            readBreakdownDetails(getFromDate);
 
             $xml.find("breakdown").each(function(){
                 var id = $(this).attr('breakdown_id');
@@ -38,10 +81,15 @@ export function getBreakdownList(loginname,password,getFromDate,callbackfunction
                 var name = $(this).attr('casting_director_display_name');
                 var published = $(this).attr('date_published');
                 var title = $(this).attr('title');
-                details = new bDetails(id,type,summary,name,published,title,title);
 
-                breakdownDetails.push(details);
+                detailFromWebservice = new bd(id,type,summary,name,published,title,false);
+
+                if (findDetailByID(detailFromWebservice.breakdown_id) == -1){ // don't push one we already have!!
+                    breakdownDetails.push(detailFromWebservice);
+                }
             });
+
+            writeBreakdownDetailsToLocalStorage();
             callbackfunction(false,this);
         })
         .fail(function() {
@@ -51,16 +99,22 @@ export function getBreakdownList(loginname,password,getFromDate,callbackfunction
     });
 }
 
+
+function findDetailByID(id){
+    var bd;
+    for (bd of breakdownDetails){if (bd.breakdown_id == id){return id;}}
+    return -1;
+}
+
 export function getBreakdowns(){
-//console.log(Breakdowns);
     return Breakdowns;
 }
 
+/*
 export function getBreakdownDetails(){
-//console.log(breakdownDetails);
     return breakdownDetails;
 }
-
+*/
 function getSummaryTypeFromType(type){
     if (type === ""){ return "Other";}
 

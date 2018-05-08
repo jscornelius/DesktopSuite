@@ -14,20 +14,7 @@ export function getConfig(loginname,password,callbackfunction){
         .done(function(data) {
             var cc = $.parseXML(new XMLSerializer().serializeToString(data.documentElement));
             var $xml = $( $.parseXML(new XMLSerializer().serializeToString(data.documentElement)) );
-//console.log(cc);
-/*
-            this.getCmail = ($xml.find("cmail")[0].textContent === '1');
-            this.getBreakdowns = ($xml.find("breakdowns")[0].textContent === '1');
 
-            // if getCmail and getBreakdowns are both 0 then this login failed
-            if ((this.getCmail === false) && (this.getBreakdowns === false)){
-            this.isUserLoggedIn = false;
-            this.username = "";
-            }else {
-                this.isUserLoggedIn = true;
-                this.username = loginName;
-            }
-*/
             callbackfunction(false,this);
         })
         .fail(function() {

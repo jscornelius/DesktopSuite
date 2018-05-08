@@ -4,57 +4,59 @@ const {ipcRenderer} = require('electron');
 
 const $ = require('jquery');
 
-//import * as Utils from './utils.js';
+var PrefsObject={
+    alertType: "alertTheatrical",
+    alertCMail: true,
+    alertBreakdowns: true,
+    loginname:"",
+    password:""
+};
 
-console.log("are we here?");
 readPrefs();
-
-$('#save-button').on('click', function(){
-    console.log("save clicked");
-    ipcRenderer.send('closePrefsWindow', "");
-});
 
 ipcRenderer.on('readPrefs', (event,arg) =>{
     readPrefs();
 });
 
-$('.mastercheckbox').click(function() {
-/*    if ($(this).is(':checked')) {
-        $('input:checkbox').prop('checked', true);
-    } else {
-        $('input:checkbox').prop('checked', false);
-    }
-*/
+$("[name='alertType']").click(function(){
     savePrefs();
 });
 
-$("input[type='checkbox'].showcheckbox").change(function(){
-/*    var a = $("input[type='checkbox'].showcheckbox");
-    if(a.length == a.filter(":checked").length){
-        $('.mastercheckbox').prop('checked', true);
+$("[type='checkbox']").click(function(){
+    if (($('#alertCMail').is(':checked') == false) && ($('#alertBreakdowns').is(':checked') == false)){
+        $('#alertCMail').prop('checked',true);
     }
-    else {
-        $('.mastercheckbox').prop('checked', false);
-    }
-*/
+
     savePrefs();
 });
 
 function savePrefs (){
-    localStorage.setItem('alert-all', $('#alert-all-cb').prop("checked"));
-    localStorage.setItem('alert-commercial', $('#alert-commercial-cb').prop("checked"));
-    localStorage.setItem('alert-theatrical', $('#alert-theatrical-cb').prop("checked"));
-    localStorage.setItem('alert-stage', $('#alert-stage-cb').prop("checked"));
-    localStorage.setItem('alert-print', $('#alert-print-cb').prop("checked"));
-    localStorage.setItem('alert-other', $('#alert-other-cb').prop("checked"));
-    ipcRenderer.send('refreshPrefs', "");
+//console.log('savePrefs');
+    localStorage.setItem('alertCMail', $('#alertCMail').is(':checked'));
+    localStorage.setItem('alertBreakdowns', $('#alertBreakdowns').is(':checked'));
+    localStorage.setItem('alertType', $('input[name="alertType"]:checked').val());
+
+    PrefsObject.alertType = $('input[name="alertType"]:checked').val();
+    PrefsObject.alertCMail= $('#alertCMail').is(':checked');
+    PrefsObject.alertBreakdowns= $('#alertBreakdowns').is(':checked');
+
+    ipcRenderer.send('refreshPrefs', PrefsObject);
 }
 
 function readPrefs (){
-    $('#alert-all-cb').prop('checked', localStorage.getItem('alert-all') == "true");
-    $('#alert-commercial-cb').prop('checked', localStorage.getItem('alert-commercial') == "true");
-    $('#alert-theatrical-cb').prop('checked', localStorage.getItem('alert-theatrical') == "true");
-    $('#alert-stage-cb').prop('checked', localStorage.getItem('alert-stage')=="true");
-    $('#alert-print-cb').prop('checked', localStorage.getItem('alert-print')=="true");
-    $('#alert-other-cb').prop('checked', localStorage.getItem('alert-other')=="true");
+//console.log(localStorage.getItem('alertCMail'));
+    var foo="";
+    if (localStorage.getItem('alertType')){
+        foo = "input:radio[id=alert"+localStorage.getItem('alertType')+"]";
+        $(foo).prop("checked",true);
+    }
+    $('#alertCMail').prop('checked',(localStorage.getItem('alertCMail') == 'true'));
+    $('#alertBreakdowns').prop('checked',(localStorage.getItem('alertBreakdowns') == 'true'));
+
+    PrefsObject.alertType = $('input[name="alertType"]:checked').val();
+    PrefsObject.alertCMail = (localStorage.getItem('alertCMail') == 'true');
+    PrefsObject.alertBreakdowns = (localStorage.getItem('alertBreakdowns') == 'true');
+
+
+    ipcRenderer.send('refreshPrefs', PrefsObject);
 }

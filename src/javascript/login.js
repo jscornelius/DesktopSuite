@@ -1,4 +1,3 @@
-//renderer context
 const {ipcRenderer} = require('electron');
 const electron = require('electron');
 const $ = require('jquery');
@@ -9,12 +8,18 @@ import * as Utils from './utils.js';
 var UserObject = {
     loginname:"",
     password:"",
-    getCmail:false,
+    getCMail:false,
     getBreakdowns:false,
     getFromDate:""
 };
 
-var PrefsObject = {};
+var PrefsObject={
+    alertType: "alertTheatrical",
+    alertCMail: "true",
+    alertBreakdowns: "true",
+    loginname:"",
+    password:""
+};
 
 var loginInProgess = false;
 
@@ -33,11 +38,38 @@ $('#loginName').val(UserObject.loginname);
 $('#password').val(localStorage.getItem('password'));
 
 //--------------------
+// read prefs Object
+function readPrefs(){
+
+    if (localStorage.getItem('alertType')){
+        PrefsObject.alertType = localStorage.getItem('alertType');
+    }else {
+        PrefsObject.alertType = 'alertTheatrical';
+        localStorage.setItem('alertType', PrefsObject.alertType);
+    }
+    if (localStorage.getItem('alertCMail')){
+        PrefsObject.alertCMail = (localStorage.getItem('alertCMail') == "true");
+    }else{
+        PrefsObject.alertCMail = true;
+        localStorage.setItem('alertCMail', 'true');
+    }
+    if (localStorage.getItem('alertBreakdowns')){
+        PrefsObject.alertBreakdowns = (localStorage.getItem('alertBreakdowns') == "true");
+    }else{
+        PrefsObject.alertBreakdowns = true;
+        localStorage.setItem('alertBreakdowns', 'true');
+    }
+
+    PrefsObject.loginname = localStorage.getItem('loginname');
+    PrefsObject.password = localStorage.getItem('password');
+}
+
+//--------------------
 // load a UserObject
-function loadUserObject(loginname,password,getCmail,getBreakdowns,datestring){
+function loadUserObject(loginname,password,getCMail,getBreakdowns,datestring){
     UserObject.loginname=loginname;
     UserObject.password=password;
-    UserObject.getCmail=getCmail;
+    UserObject.getCMail=getCMail;
     UserObject.getBreakdowns = getBreakdowns;
     UserObject.getFromDate = datestring;
 }
@@ -52,6 +84,14 @@ function displayMessage(message){
 ipcRenderer.on('setUserObject', (event,arg) =>{
     UserObject = arg;
 });
+
+$(window).on('keydown', function(event) {
+    if (event.keyCode === 13) {
+        $('#login-button').trigger('click');
+        event.preventDefault();
+    }
+});
+
 //--------------------
 // login button
 $('#login-button').on('click', function(){
@@ -70,7 +110,9 @@ $('#login-button').on('click', function(){
     LoginController.doLogin(loginname,password,function(err,loginresponse){
         if (!err){
             if (loginresponse.isUserLoggedIn){
-                loadUserObject(loginname,password,loginresponse.getCmail,loginresponse.getBreakdowns,moment().format('MM/DD/YYYY'));
+                loadUserObject(loginname,password,loginresponse.getCMail,loginresponse.getBreakdowns,moment().format('MM/DD/YYYY'));
+                localStorage.setItem('getCMail',loginresponse.getCMail);
+                localStorage.setItem('getBreakdowns',loginresponse.getBreakdowns);
                 if ($('#remember-me').prop("checked")){
                     localStorage.setItem('loginname', UserObject.loginname);
                     localStorage.setItem('password', UserObject.password);
@@ -78,6 +120,8 @@ $('#login-button').on('click', function(){
                     localStorage.setItem('loginname', "");
                     localStorage.setItem('password', "");
                 }
+                readPrefs();
+                ipcRenderer.send('refreshPrefs', PrefsObject);
                 // pass the UserObject back to Main
                 ipcRenderer.send('userIsLoggedIn', UserObject);
             }else { //
