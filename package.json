@@ -21,6 +21,7 @@
     "electron-reload": "^1.2.2"
   },
   "dependencies": {
+    "aria-listbox": "^0.2.0",
     "countdown": "^2.6.0",
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
