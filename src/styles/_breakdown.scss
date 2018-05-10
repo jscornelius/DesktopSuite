@@ -1,49 +1,61 @@
-.content{
+.listcontent{
+    height: 100%;
+    width: 100%;
+
+    //background: $defaultGradient;
+    background-color:$defaultBackground;
     .release-date{
+        height:30px;
+
         display: grid;
         grid-template-columns: 1;
         grid-template-rows: 1;
         font-size: $dataFontSize;
-        height: 35px;
-        width: 100%;
+
         align-items: center;
         justify-content: center;
-        margin: $padding;
+
+        //background-color: #000;
     }
     .breakdown-container {
         font-size: $dataFontSize;
+       * {box-sizing: border-box;}
 
-        * {box-sizing: border-box;}
+        //background-color: #F00;
 
         .breakdown-list {
+            grid-column: 1;
+            grid-row: 1;
+            height:92%;
+
             font-size: $dataFontSize;
+            color: $textColorDark;
+            background:$defaultGridColorA;
             position: absolute;
-            top: 55px;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
+            top: 30px;
+            left: 10px;
+            right: 10px;
+
             overflow: scroll;
             margin: 0;
             padding: 0;
-            border: 2px solid #ccc;
             overflow: auto;
-            //-webkit-overflow-scrolling: touch;
         }
         .breakdown-list-header {
-            padding: 10px 20px;
-            height: rem-calc(28px);
+            padding: 10px 10px;
+            height: rem-calc(20px);
             display: grid;
             grid-template-columns: 10% 50% 15% 25% ;
             grid-template-rows: 1;
-
-
         }
+
         .breakdown-list-item {
-            padding: 10px 20px;
-            height: rem-calc(28px);
+            padding: 10px 10px;
+            height: rem-calc(20px);
             display: grid;
             grid-template-columns: 10% 50% 15% 20% 5%;
             grid-template-rows: 1;
+            //font-weight: bold;
 
             //border-bottom: 1px solid #ccc;
 
@@ -52,20 +64,21 @@
             }
 
             &:nth-child(even) {
-                background: $defaultBodyColor;
+                background: $defaultGridColorB;
             }
 
             .breakdown-column{
                 font-size: $listFontSize;
                 width: 100%;
-                height: rem-calc(28px);
+                //height: rem-calc(28px);
 
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
-                .breakdown-unviewed{
-                    font-family: $defaultFontBold;
-                }
+
+            }
+            .new-item{
+                font-weight: bold;
             }
 
         }

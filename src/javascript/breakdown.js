@@ -9,48 +9,47 @@ import * as Utils from './utils.js';
 
 var breakdownDetails = [];
 
-function bd(id,type,summary,name,date,title,viewed){
+function bd(id,type,summary,name,date,title,isnew,alerted){
     this.breakdown_id = id;
     this.breakdown_type=type;
     this.breakdown_type_summary=summary;
     this.casting_director_display_name=name;
     this.date_published=date;
     this.title=title;
-    this.viewed=viewed;
+    this.isnew=isnew;
+    this.alerted=alerted;
 }
 
 //--------------------
-ipcRenderer.on('populateBreakdownDetails', (event,arg) =>{
+ipcRenderer.on('updateBreakdownList', (event,arg) =>{
     var alertType = localStorage.getItem('alertType');
     $('#released-on').html(alertType+' Breakdowns Released '+ moment().format('MMMM Do YYYY'));
-    //clearBreakdownList();
+    clearBreakdownList();
     readBreakdownDetailsFromLocalStorage();
 });
 
 //--------------------
 ipcRenderer.on('prefsUpdated', (event,arg) =>{
-    writeBreakdownDetailsToLocalStorage();
+//    writeBreakdownDetailsToLocalStorage();
     clearBreakdownList();
     readBreakdownDetailsFromLocalStorage();
 });
 
-ipcRenderer.on('updateBreakdownDetails', (event,arg) =>{ //  update the breakdowns when this window closes
-    writeBreakdownDetailsToLocalStorage();
-});
-
 window.addEventListener('beforeunload', function(event){
-    //breakdownWindow.webContents.send("updateBreakdownDetails");
     writeBreakdownDetailsToLocalStorage();
+    if (mainWindow){
+        ipcRenderer.send('_updateBreakdownMenuCount', 0);
+        ipcRenderer.send('_updateNewBreakdownCount', 0);
+    }
 });
 
 function writeBreakdownDetailsToLocalStorage(){
     var alertType = localStorage.getItem('alertType');
     var bd;
-console.log("updating breakdown details");
 
     for (bd of breakdownDetails){
         if (bd.breakdown_type_summary == alertType) {
-            bd.viewed = true;
+            bd.isnew = false;
         }
     }
     breakdownDetails.sort((a, b) => (a.date_published < b.date_published) ? 1 : ((a.date_published > b.date_published) ? -1 : 0));
@@ -61,7 +60,9 @@ function readBreakdownDetailsFromLocalStorage(){
     var alertType = localStorage.getItem('alertType');
     var bd;
 
-    breakdownDetails = JSON.parse(localStorage.getItem('breakdownDetails'));
+    var localStorageBreakdownList = localStorage.getItem('breakdownDetails');
+    if (localStorageBreakdownList == null){return;}
+    breakdownDetails = JSON.parse(localStorageBreakdownList);
     breakdownDetails.sort((a, b) => (a.date_published < b.date_published) ? 1 : ((a.date_published > b.date_published) ? -1 : 0));
 
     for (bd of breakdownDetails){
@@ -94,7 +95,10 @@ function addListItem(breakdownDetail, alertType){
     var ul = document.getElementById("breakdown-list");
     var li = document.createElement("li");
     li.setAttribute('id',breakdownDetail.breakdown_id);
-    li.setAttribute('class','breakdown-list-item');
+    li.setAttribute('class',"breakdown-list-item");
+    if (breakdownDetail.isnew){
+        li.setAttribute('class',"breakdown-list-item new-item");
+    }
     li.onclick = function() {
         browseToBreakdown(breakdownDetail.breakdown_id);
     };
@@ -121,10 +125,10 @@ function addListItem(breakdownDetail, alertType){
     castinglabel.setAttribute('class','breakdown-column');
     li.appendChild(castinglabel);
 
-    var viewedlabel = document.createElement("label");
-    viewedlabel.innerHTML = breakdownDetail.viewed;
-    viewedlabel.setAttribute('class','breakdown-column');
-    li.appendChild(viewedlabel);
+    var isnewlabel = document.createElement("label");
+    isnewlabel.innerHTML = breakdownDetail.isnew ? "NEW" : "";
+    isnewlabel.setAttribute('class','breakdown-column');
+    li.appendChild(isnewlabel);
 
     ul.appendChild(li);
 

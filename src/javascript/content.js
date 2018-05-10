@@ -21,14 +21,7 @@ var globalTimer = "";
 var alertTimer;
 
 var firstRun = true;
-var summaryTypes={
-    "All":0,
-    "Commercial":0,
-    "Theatrical":0,
-    "Stage":0,
-    "Print":0,
-    "Other":0
-};
+
 var UserType={
     "CMailOnly":0,
     "BreakdownOnly":1,
@@ -55,6 +48,8 @@ var PrefsObject={
     loginname:"",
     password:""
 };
+
+var breakdownDetails=[];
 
 var alertSound = new Howl({ src: ['./assets/sounds/lowping.mp3'] });
 
@@ -120,11 +115,6 @@ function applyPrefs(){
         getDataForUser(UserType.CMailOnly);
     }
 }
-//--------------------
-ipcRenderer.on('prefsUpdated', (event,arg) =>{
-    readPrefs();
-    applyPrefs();
-});
 
 //--------------------
 // display a message
@@ -186,6 +176,19 @@ ipcRenderer.on('menuCheckForBreakdowns', (event,arg) =>{
 // check for breakdowns menu pressed
 ipcRenderer.on('menuCheckForCMail', (event,arg) =>{
     getDataForUser(UserType.CMailOnly);
+});
+
+//--------------------
+ipcRenderer.on('prefsUpdated', (event,arg) =>{
+    readPrefs();
+    applyPrefs();
+});
+
+//--------------------
+ipcRenderer.on('updateNewBreakdownCount', (event,arg) =>{
+    $("[id='breakdowncircle']").addClass('hidden');
+    gNotificationtext = "";
+    gNotify = false;
 });
 
 //--------------------
@@ -273,7 +276,7 @@ function getCMailCount(UO){
             }
             $('#CMailCount').html(CMailCount);
             $('#CMailNew').html(newCMailCount);
-            ipcRenderer.send('updateCMailCount', CMailCount);
+            ipcRenderer.send('updateCMailMenuCount', CMailCount);
         }else{
             CMails = "";
             CMailCount = 0;
@@ -295,88 +298,53 @@ function getBreakdowns(UO){//loginname,password,getFromDate){
     var breakdownDetails =[];
     var breakdownCount = 0;
     var newBreakdownCount = 0;
+    var alertCount = 0;
 
     BreakdownController.getBreakdownList(UO.loginname,UO.password,UO.getFromDate,function(err,response){
         if (!err){
 
-/*            lastCount[0]=summaryTypes.All;
-            lastCount[1]=summaryTypes.Commercial;
-            lastCount[2]=summaryTypes.Theatrical;
-            lastCount[3]=summaryTypes.Stage;
-            lastCount[4]=summaryTypes.Print;
-            lastCount[5]=summaryTypes.Other;
-*/
-/*            summaryTypes={
-                "All":0,
-                "Commercial":0,
-                "Theatrical":0,
-                "Stage":0,
-                "Print":0,
-                "Other":0
-            };
-*/
             Breakdowns = BreakdownController.getBreakdowns();
-            breakdownDetails = JSON.parse(localStorage.getItem('breakdownDetails'));
-            //BreakdownController.getBreakdownDetails();
+            var b = localStorage.getItem('breakdownDetails');
+            if (b != null){
+                breakdownDetails = JSON.parse(b);
+            }
 
             newBreakdownCount = 0;
             breakdownCount = 0;
+            alertCount = 0;
             breakdownDetails.forEach(function(b){
-console.log(b.viewed);
                 if (b.breakdown_type_summary == PrefsObject.alertType){
                     breakdownCount+=1;
-                    if (b.viewed == false){
+                    if (b.isnew == true){
                         newBreakdownCount+=1;
+                        if (b.alerted == false){
+                            alertCount+=1;
+                            updateAlertStatus(b.breakdown_id);
+                        }
                     }
                 }
-
-//                summaryTypes.All += 1;
-//                summaryTypes[b.breakdown_type_summary] += 1;
             });
+            if (newBreakdownCount > 0) {// this means we have another breakdown released
+                $('#breakdownNew').html(newBreakdownCount);
+                $("[id='breakdowncircle']").removeClass('hidden');
 
-/*            newCount[0] += summaryTypes.All - lastCount[0];
-            newCount[1] += summaryTypes.Commercial - lastCount[1];
-            newCount[2] += summaryTypes.Theatrical - lastCount[2];
-            newCount[3] += summaryTypes.Stage - lastCount[3];
-            newCount[4] += summaryTypes.Print - lastCount[4];
-            newCount[5] += summaryTypes.Other - lastCount[5];
-
-            if (PrefsObject.alertType == 'Theatrical'){
-                displayValue = 2;
-                checkForNew = summaryTypes.Theatrical;
-                //displayTitle = "Theatrical Breakdowns:";
-            }
-            if (PrefsObject.alertType == 'Commercial'){
-                displayValue = 1;
-                checkForNew = summaryTypes.Commercial;
-                //displayTitle = "Commercial Breakdowns:";
-            }
-            if (PrefsObject.alertType == 'Stage'){
-                displayValue = 3;
-                checkForNew = summaryTypes.Stage;
-                //displayTitle = "Stage Breakdowns:";
-            }
-*/
-            //$('#BreakdownGroupHeader').text(displayTitle);
-//            if (firstRun){
-//                firstRun = false;
-//            }
-//            else {
-                if (newBreakdownCount > 0) {// this means we have another breakdown released
-                    $('#breakdownNew').html(newBreakdownCount);
-//                    if (newCount[displayValue] > 0 ){
-
-                        $("[id='breakdowncircle']").removeClass('hidden');
-
-                        gNotificationtext = "Breakdowns released today:" + breakdownCount + "\n New breakdowns:" + newBreakdownCount + "\n";
-                        gNotify = true;
-//                    }
+                gNotificationtext = "New breakdowns:" + newBreakdownCount + "\n";
+                if (alertCount > 0){
+                    gNotify = true;
                 }
-//            }
+
+                // mark these as no longer new, since we've seen them
+                //updateBreakdownDetailsLocalStorage();
+            }
+            else{
+                $("[id='breakdowncircle']").addClass('hidden');
+                gNotificationtext = "";
+                gNotify = false;
+            }
 
             $('#breakdownCount').html(breakdownCount);
-            ipcRenderer.send('updateBreakdownCount', breakdownCount);
-            ipcRenderer.send('updateBreakdownList', "");
+            ipcRenderer.send('_updateBreakdownMenuCount', newBreakdownCount);
+            ipcRenderer.send('_updateBreakdownList', "");
         }else{
             Breakdowns = "";
             BreakdownCount = 0;
@@ -386,4 +354,42 @@ console.log(b.viewed);
             console.log("error: unable to get breakdowns");
         }
   });
+}
+
+function updateAlertStatus(breakdownID){
+    var bd;
+    var localStorageBreakdownList;
+
+    localStorageBreakdownList=localStorage.getItem('breakdownDetails');
+    if (localStorageBreakdownList == null){return;}
+    breakdownDetails = JSON.parse(localStorageBreakdownList);
+
+    for (bd of breakdownDetails){
+        if (bd.breakdown_id == breakdownID) {
+            bd.alerted = true;
+        }
+    }
+    breakdownDetails.sort((a, b) => (a.date_published < b.date_published) ? 1 : ((a.date_published > b.date_published) ? -1 : 0));
+    localStorage.setItem('breakdownDetails', JSON.stringify(breakdownDetails));
+}
+
+
+//--------------------
+// update new status of breakdown list
+function updateBreakdownDetailsLocalStorage(){
+    var alertType = localStorage.getItem('alertType');
+    var bd;
+    var localStorageBreakdownList;
+
+    localStorageBreakdownList=localStorage.getItem('breakdownDetails');
+    if (localStorageBreakdownList == null){return;}
+    breakdownDetails = JSON.parse(localStorageBreakdownList);
+
+    for (bd of breakdownDetails){
+        if (bd.breakdown_type_summary == alertType) {
+            bd.isnew = false;
+        }
+    }
+    breakdownDetails.sort((a, b) => (a.date_published < b.date_published) ? 1 : ((a.date_published > b.date_published) ? -1 : 0));
+    localStorage.setItem('breakdownDetails', JSON.stringify(breakdownDetails));
 }

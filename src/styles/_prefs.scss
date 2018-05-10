@@ -1,65 +1,60 @@
-
-.prefs-content {
-    background-color: $defaultBackground;
-    font-size: $dataFontSize;
+.prefscontent{
+    height: 100%;
+    //background: $defaultGradient;
+    background-color:$defaultBackground;
 
     display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
 
-    grid-template-columns: 1fr 1fr 2fr;
-    grid-template-rows: 1fr 3fr 1fr;
-    align-items: top;
-    align-content: center;
-    justify-content: left;
-    justify-items: left;
+    .datasection{
+        background-color: $panelColor;
+        grid-column: 1;
+        grid-row: 1;
+        border-radius: $corner;
+        margin: 10px;
 
-    .alertCMail{
-        grid-column: 2;
-        grid-row: 2;
-        //margin: rem-calc($padding);
-    }
-    .alertBreakdowns{
-        grid-column: 3;
-        grid-row: 2;
+        display: grid;
 
-        .choices{
+        grid-template-columns: 1fr 1fr 2fr;
+        grid-template-rows: 1fr 3fr 1fr;
+        align-items: top;
+        align-content: center;
+        justify-content: left;
+        justify-items: left;
 
-            display: grid;
-            align-items: center;
-            align-content: center;
+        .alertCMail{
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .alertBreakdowns{
+            grid-column: 3;
+            grid-row: 2;
 
-            grid-template-columns: 1fr;
-            grid-template-rows: 3;
+            .choices{
+                display: grid;
+                align-items: center;
+                align-content: center;
 
-            grid-gap: 10px;
-            margin: rem-calc($padding);
+                grid-template-columns: 1fr;
+                grid-template-rows: 3;
 
-            //border-radius: 5px;
-            .alert-theatrical{
-                grid-row: 1;
-                grid-column:2;
-            }
-            .alert-commercial{
-                grid-row: 2;
-                grid-column:2;
-            }
-            .alert-stage{
-                grid-row: 3;
-                grid-column:2;
+                grid-gap: 10px;
+                margin: rem-calc($padding);
+
+                .alert-theatrical{
+                    grid-row: 1;
+                    grid-column:2;
+                }
+                .alert-commercial{
+                    grid-row: 2;
+                    grid-column:2;
+                }
+                .alert-stage{
+                    grid-row: 3;
+                    grid-column:2;
+                }
             }
         }
     }
-    .save-button{
-        grid-row: 2 / 3;
-        grid-column: 2;
-
-        background: $defaultGradient;
-        width: rem-calc(120px);
-        height: rem-calc(35px);
-        border: 0;
-        border-radius: 3px;
-        color: $textHighlightColor;
-        background: $highlightColor;
-
-    }
-
 }

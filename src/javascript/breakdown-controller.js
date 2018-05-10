@@ -12,15 +12,15 @@ export function init(url){
     myurl = url;
 }
 
-function bd(id,type,summary,name,date,title,viewed){
+function bd(id,type,summary,name,date,title,isnew,alerted){
     this.breakdown_id = id;
     this.breakdown_type=type;
     this.breakdown_type_summary=summary;
     this.casting_director_display_name=name;
     this.date_published=date;
     this.title=title;
-    this.viewed=viewed;
-
+    this.isnew=isnew;
+    this.alerted=alerted;
 }
 
 function writeBreakdownDetailsToLocalStorage(){
@@ -82,7 +82,7 @@ function getBreakdownWebservice(loginname,password,getFromDate,callbackfunction)
                 var published = $(this).attr('date_published');
                 var title = $(this).attr('title');
 
-                detailFromWebservice = new bd(id,type,summary,name,published,title,false);
+                detailFromWebservice = new bd(id,type,summary,name,published,title,true,false);
 
                 if (findDetailByID(detailFromWebservice.breakdown_id) == -1){ // don't push one we already have!!
                     breakdownDetails.push(detailFromWebservice);

@@ -32,11 +32,14 @@ $("[type='checkbox']").click(function(){
 
 function savePrefs (){
 //console.log('savePrefs');
+    var s = "";
     localStorage.setItem('alertCMail', $('#alertCMail').is(':checked'));
     localStorage.setItem('alertBreakdowns', $('#alertBreakdowns').is(':checked'));
-    localStorage.setItem('alertType', $('input[name="alertType"]:checked').val());
+    s = $('input[name="alertType"]:checked').val();
+    s = s.trimLeft();
+    localStorage.setItem('alertType', s);
 
-    PrefsObject.alertType = $('input[name="alertType"]:checked').val();
+    PrefsObject.alertType = s;
     PrefsObject.alertCMail= $('#alertCMail').is(':checked');
     PrefsObject.alertBreakdowns= $('#alertBreakdowns').is(':checked');
 
@@ -46,14 +49,20 @@ function savePrefs (){
 function readPrefs (){
 //console.log(localStorage.getItem('alertCMail'));
     var foo="";
+    var s = "";
     if (localStorage.getItem('alertType')){
-        foo = "input:radio[id=alert"+localStorage.getItem('alertType')+"]";
+        s = localStorage.getItem('alertType');
+        s = s.trimLeft();
+        foo = "input:radio[id=alert"+s+"]";
         $(foo).prop("checked",true);
     }
     $('#alertCMail').prop('checked',(localStorage.getItem('alertCMail') == 'true'));
     $('#alertBreakdowns').prop('checked',(localStorage.getItem('alertBreakdowns') == 'true'));
 
-    PrefsObject.alertType = $('input[name="alertType"]:checked').val();
+    s = $('input[name="alertType"]:checked').val();
+    s = s.trimLeft();
+
+    PrefsObject.alertType = s;
     PrefsObject.alertCMail = (localStorage.getItem('alertCMail') == 'true');
     PrefsObject.alertBreakdowns = (localStorage.getItem('alertBreakdowns') == 'true');
 

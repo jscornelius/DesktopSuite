@@ -1,73 +1,103 @@
-.login {
-    background-color: $defaultBackground;
-    width: 100%;
-    height:100%;
+.logincontent{ // the entire background
+    height: 100%;
+//    background: $defaultGradient;
+    background-color:$defaultBackground;
 
-    .message {
-        //position: absolute;
-        padding-top: 10px;
-        padding-left: 10px;
-        width: 70%;
-        height: 10px;
-    }
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
 
-    .login-fields{
+    .login { // the actual data area
+        grid-column: 1;
+        grid-row: 1/4;
+
         display: grid;
-        grid-template-columns: 1fr 3fr;
-        grid-template-rows: 1fr 1fr;
-        grid-gap: 20px;
-        padding: 20px;
-        align-items: center;
-        font-size: $dataFontSize;
-        input{
-            background-color: $defaultBackground;
-            border: 2px solid $defaultBorderColor;
-            font-size: $dataFontSize;
-            border-radius: 2px;
-            height: rem-calc(25px);
-            width: 100%;
-            align-items: center;
-            text-align: left;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 3fr 4fr;
+        border-radius: $corner;
+        margin: 10px;
+        background-color: $panelColor;
+
+        align-items: center; // vertical alignment
+        align-content: center;
+
+        .message {
+            grid-column: 1;
+            grid-row:1;
+//            background-color: #0f0;
+            padding-left: 20px;
         }
-        input[type=text],input[type=password]{
-            &.invalid{
-                border: 2px solid red;
+
+        .login-fields{
+            grid-column: 1;
+            grid-row:2;
+//            background-color: #00f;
+
+            display: grid;
+
+            grid-template-columns: 2fr 3fr;
+            grid-template-rows: 1fr 1fr;
+            grid-gap: 15px;
+            align-items: center;
+
+            font-size: $dataFontSize;
+            color: $textColorLight;
+            .login-label{
+                grid-column: 1;
+                justify-self: right;
+            }
+            .login-field{
+                justify-self: left;
+                grid-column: 2;
+                background-color: $inputFieldColorLight;
+                outline: none;
+                border: 2px solid $defaultBorderColor;
+                color: $textColorDark;
+
+                font-size: $dataFontSize;
+                border-radius: 2px;
+                height: 20px;
+                //width: 80%;
+            }
+            input[type=text],input[type=password]{
+                &.invalid{
+                    border: 2px solid red;
+                }
+            }
+        }
+        .login-buttons {
+            grid-column: 1;
+            grid-row:3;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            padding-left: 5px;
+            padding-right: 10px;
+            align-items: center;
+            justify-items: center;
+            font-size: $dataFontSize;
+
+            .login-button{
+                grid-column:2;
+                grid-row: 1 / 3;
+
+                font-size: $dataFontSize;
+                width: rem-calc(90px);
+                height: rem-calc(25px);
+                border: 0;
+                border-radius: 3px;
+                color: $textColorLight;
+                background-color: $buttonColor;
+            }
+            .login-checkbox{
+                grid-column:1;
+                grid-row:1;
+            }
+            .login-forgot{
+                grid-column:1;
+                grid-row:2;
+                color: $textColorLight;
             }
         }
     }
-    .login-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        grid-gap: 20px;
-        padding: 20px;
-        align-items: center;
-        justify-items: center;
-        font-size: $dataFontSize;
-
-        .login-button{
-            grid-column:2;
-            grid-row: 1 / span 2;
-
-            font-size: $dataFontSize;
-            background: $defaultGradient;
-            width: rem-calc(120px);
-            height: rem-calc(35px);
-            border: 0;
-            border-radius: 3px;
-            color: $textHighlightColor;
-            background: $buttonGradient;
-        }
-        .login-checkbox{
-            grid-column:1;
-            grid-row:1;
-        }
-        .login-forgot{
-            grid-column:1;
-            grid-row:2;
-            color: $textColor;
-        }
-    }
-
-
 }

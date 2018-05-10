@@ -1,19 +1,21 @@
-@font-face {
-  font-family: 'Roboto-Regular';
-  src: url('../assets/fonts/Roboto-Regular.woff') format('woff2');
-}
+//@font-face {
+//  font-family: 'Roboto-Regular';
+//  src: url('../assets/fonts/Roboto-Regular.woff') format('woff2');
+//}
 
 .hidden {
   display: none !important;
 }
 
-html,
+html{
+    height:100%;
+}
 body {
-  font-family: $defaultFont;
-  font-size: $baseFontSize;
-  height: 98%;
-  color: $textColor;
-  background-color: $defaultBackground;
+    height: 100%;
+    font-family: $defaultFont;
+    font-size: $dataFontSize;
+
+    color: $textColorLight;
 
 }
 //label,
@@ -21,17 +23,11 @@ textarea,
 input,
 button {
   outline: none;
-  font-size: $baseFontSize;
-  font-family: $defaultFont;
-  color: $textHighlightColor;
 }
 button {
   cursor: pointer;
 }
 
 .container {
-  height: 100%;
-  width: 100%;
-  background-color: $defaultBackground;
-
+    height: 100%;
 }

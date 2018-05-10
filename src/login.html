@@ -7,20 +7,24 @@
         <link rel="stylesheet" href="../src/styles/index.scss">
     </head>
     <body>
-        <div class="login">
-            <div class="message">
-                    <label id="messageText">----</label>
-            </div>
-            <div class="login-fields" id="logingroup">
-                <div class="c1"><label id="loginLabel" for="loginName" >Username</label></div>
-                <div class="c2"><input type="text" id="loginName"></div>
-                <div class="c3"><label id="passwordLabel" for="password">Password</label></div>
-                <div class="c4"><input type="password" id="password"></div>
-            </div>
-            <div class="login-buttons">
-                <div class="login-checkbox"><input type="checkbox" class="remember-me" checked="checked" id="remember-me">  Remember Me</input></div>
-                <div class="login-forgot"><a href="http://www.breakdownexpress.com/login.cfm" target="_blank" style="color: #9399AE">Forgot my Password...</a></div>
-                <div class="login-button"><button type="button" class="login-button" id='login-button'>Log In</button></div>
+        <div class="container">
+            <div class="logincontent">
+                <div class="login">
+                    <div class="message" >
+                        <label id="messageText">default message text</label>
+                    </div>
+                    <div class="login-fields" id="logingroup">
+                        <div class="login-label"><label id="loginLabel" for="loginName" >Username</label></div>
+                        <div class="login-field"><input type="text" id="loginName"></div>
+                        <div class="login-label"><label id="passwordLabel" for="password">Password</label></div>
+                        <div class="login-field"><input type="password" id="password"></div>
+                    </div>
+                    <div class="login-buttons">
+                        <div class="login-checkbox"><input type="checkbox" class="remember-me" checked="checked" id="remember-me">  Remember Me</input></div>
+                        <div class="login-forgot"><a href="http://www.breakdownexpress.com/login.cfm" target="_blank" style="color: #fff">Forgot my Password...</a></div>
+                        <div class="login-button"><button type="button" class="login-button" id='login-button'>Log In</button></div>
+                    </div>
+                </div>
             </div>
         </div>
         <script> require ('../src/javascript/login.js')</script>

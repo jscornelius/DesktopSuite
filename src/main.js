@@ -238,7 +238,7 @@ function createMainWindow() {
 if (isdev === true){
     mainWindow =  new electron.BrowserWindow({
         width: 300 ,
-        height: 300,
+        height: 150,
         //frame: false
     });
 }else{
@@ -274,6 +274,9 @@ if (isdev === true){
         if (loginWindow){
             loginWindow.close();
         }
+        if (breakdownWindow){
+            breakdownWindow.close();
+        }
         mainWindow = null;
     });
 }
@@ -298,7 +301,7 @@ function createPrefsWindow(){
     }));
 
     if (isdev === true){
-        prefsWindow.webContents.openDevTools();
+        //prefsWindow.webContents.openDevTools();
     }
 
     prefsWindow.on('closed', () => {
@@ -358,15 +361,15 @@ function createBreakdownWindow(){
     }));
 
     if (isdev === true){
-        breakdownWindow.webContents.openDevTools();
+        //breakdownWindow.webContents.openDevTools();
     }
 
     breakdownWindow.webContents.on('did-finish-load', () => {
-        breakdownWindow.webContents.send("populateBreakdownDetails");
+        breakdownWindow.webContents.send("updateBreakdownList");
     });
 
     breakdownWindow.on('beforeunload', () =>{
-console.log("updating breakdown details");
+//console.log("updating breakdown details");
         breakdownWindow.webContents.send("updateBreakdownDetails");
     });
 
@@ -431,10 +434,10 @@ function sendMessage(messageText){
 }
 //--------------------------
 // interprocess communications
-//-- the breakdown list window stuff
-ipcMain.on('updateBreakdownList', (event,arg) =>{
+//-- when we get a new breakdown update the list if the window is open
+ipcMain.on('_updateBreakdownList', (event,arg) =>{
     if (breakdownWindow){
-        breakdownWindow.webContents.send("populateBreakdownDetails");
+        breakdownWindow.webContents.send("updateBreakdownList");
     }
 });
 
@@ -449,7 +452,9 @@ ipcMain.on('closePrefsWindow', (event,arg) =>{
 });
 ipcMain.on('refreshPrefs', (event,arg) =>{
     PrefsObject = arg;
-    mainWindow.webContents.send('prefsUpdated',"");
+    if (mainWindow){
+        mainWindow.webContents.send('prefsUpdated',"");
+    }
     if (breakdownWindow){
         breakdownWindow.webContents.send("prefsUpdated");
     }
@@ -457,8 +462,9 @@ ipcMain.on('refreshPrefs', (event,arg) =>{
 //-- login
 ipcMain.on('createLoginWindow', (event,arg) =>{
     createLoginWindow();
-    mainWindow.webContents.send('setUserObject',UserObject);
-
+    if (mainWindow){
+        mainWindow.webContents.send('setUserObject',UserObject);
+    }
 });
 ipcMain.on('userIsLoggedIn', (event,arg) =>{
     UserObject = arg;
@@ -469,11 +475,15 @@ ipcMain.on('userIsLoggedIn', (event,arg) =>{
     mainWindow.webContents.send('beginMainLoop',UserObject);
 });
 ipcMain.on('closeLoginWindow', (event,arg) =>{
-    loginWindow.close();
+    if(loginWindow){
+        loginWindow.close();
+    }
 });
 ipcMain.on('loginFailed', (event,arg) =>{
     gIsUserAuthenticated = false;
-    loginWindow.close();
+    if (loginWindow){
+        loginWindow.close();
+    }
     createAlertWindow("Unable to Login");
 });
 //-- alerts
@@ -485,14 +495,21 @@ ipcMain.on('closeAlertWindow', (event,arg) =>{
         alertWindow.close();
     }
 });
-//-- update cmail and breakdown count on menus
-ipcMain.on('updateBreakdownCount', (event,arg) =>{
+//-- update cmail and breakdown count on menus when a new item is detected
+ipcMain.on('_updateBreakdownMenuCount', (event,arg) =>{
     createMenus(arg,-1);
     setMenuLoggedIn(true);
 });
-ipcMain.on('updateCMailCount', (event,arg) =>{
+ipcMain.on('updateCMailMenuCount', (event,arg) =>{
     createMenus(-1,arg);
     setMenuLoggedIn(true);
+});
+
+//-- update the "new" count after we view the new breakdowns
+ipcMain.on('_updateNewBreakdownCount', (event,arg) =>{
+    if (mainWindow){
+        mainWindow.webContents.send('updateNewBreakdownCount',"");
+    }
 });
 
 //-- resize the main window

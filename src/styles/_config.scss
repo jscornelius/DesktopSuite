@@ -1,16 +1,33 @@
 $baseFontSize: 10px;
 $dataFontSize: 12px;
 $listFontSize: 12px;
-$defaultFont: Roboto-Thin;
-$defaultFontBold: Roboto-Regular;
-$textColor: #fff;
-$textHighlightColor: #f0f0f0;
-$defaultGradient: linear-gradient(-180deg, #748AA7 0%, #294265 100%);
-$defaultBorderColor: #3C3F4A;
+$corner: 5px;
+
+$defaultFont: Arial;//Roboto-Regular;
+$defaultFontBold: Arial-Bold;
+
+$textColorLight: #fff;
+$textColorDark: #000;
+
+$inputFieldColorLight: #fff;
+$inputFieldColorDark: #000026;
+
+$textHighlightColor: #FFF;
+
+$defaultGradient: linear-gradient(135deg, #04a5aa 0%, #00447d 40%, #000026 100%);
+
+$defaultBorderColor: #101010;
 $highlightColor: #439033;
+
 $buttonGradient: linear-gradient(-180deg, #33AD22 0%, #4E7C3F 100%);
-$defaultBodyColor: #073257;
-$defaultBackground: #00243A;
-$defaultRollover: #073257;
+$buttonColor: #33AD22;
+
+$defaultBodyColor: #151515;
+$defaultBackground: #303030;
+$panelColor: #404040;
+//$defaultRollover: #073257;
+
+$defaultGridColorA:#E6E6E6;//#547aa4;
+$defaultGridColorB:#c1c1c1;//#546d96;
 
 $padding:8px;
