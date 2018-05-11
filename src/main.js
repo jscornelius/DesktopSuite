@@ -1,5 +1,5 @@
 // main js file
-var isdev = true;
+var isdev=true;
 const electron = require('electron');
 const app = electron.app;
 const url = require('url');
@@ -20,7 +20,7 @@ var UserObject = {
 };
 
 var PrefsObject={
-    alertType: "alertTheatrical",
+    alertType: "Theatrical",
     alertCMail: true,
     alertBreakdowns: true,
     loginname:"",
@@ -65,11 +65,12 @@ function logout(){
 
 //--------------------------
 // live reloading of the interface when something changes - development only
+// uncomment for development
 if (isdev){
     const electronReload = require('electron-reload');
 
     electronReload(__dirname,{
-      electron: path.join(__dirname, '../','node_modules','.bin','electron')
+        electron: path.join(__dirname, '../','node_modules','.bin','electron')
     });
 }
 
@@ -232,22 +233,18 @@ function setMenuLoggedIn(how){
     getMenuItem('Log in as a different user').enabled = true;
 }
 
-//--------------------------------
+//--------------------------------//--------------------------------//--------------------------------
+//--------------------------------//--------------------------------//--------------------------------
+//--------------------------------//--------------------------------//--------------------------------
+//--------------------------------//--------------------------------//--------------------------------
 // main window
 function createMainWindow() {
-if (isdev === true){
     mainWindow =  new electron.BrowserWindow({
         width: 300 ,
         height: 150,
-        //frame: false
+        icon: path.join(__dirname, 'assets/icons/png/64x64.png')
     });
-}else{
-    mainWindow =  new electron.BrowserWindow({
-        width: 300 ,
-        height: 150,
-        frame: false
-    });
-}
+
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, '.','content.html'),
@@ -256,9 +253,8 @@ if (isdev === true){
         slashes: true
     }));
 
-    if (isdev === true){
-        mainWindow.webContents.openDevTools();
-    }
+// uncomment for development
+if (isdev) mainWindow.webContents.openDevTools();
 
     createMenus(0,0);
     setMenuLoggedIn(false);
@@ -290,7 +286,7 @@ function createPrefsWindow(){
 
     prefsWindow =  new electron.BrowserWindow({
         width: 375 ,
-        height: 220,
+        height: 180,
         //frame: false
     });
 
@@ -300,9 +296,8 @@ function createPrefsWindow(){
         slashes: true
     }));
 
-    if (isdev === true){
-        //prefsWindow.webContents.openDevTools();
-    }
+// uncomment for development
+//prefsWindow.webContents.openDevTools();
 
     prefsWindow.on('closed', () => {
         prefsWindow = null;
@@ -330,9 +325,8 @@ function createLoginWindow(){
         slashes: true
     }));
 
-    if (isdev === true){
-        //loginWindow.webContents.openDevTools();
-    }
+// uncomment for development
+//loginWindow.webContents.openDevTools();
 
     loginWindow.setAlwaysOnTop(true);
 
@@ -360,16 +354,14 @@ function createBreakdownWindow(){
         slashes: true
     }));
 
-    if (isdev === true){
-        //breakdownWindow.webContents.openDevTools();
-    }
+// uncomment for development
+//breakdownWindow.webContents.openDevTools();
 
     breakdownWindow.webContents.on('did-finish-load', () => {
         breakdownWindow.webContents.send("updateBreakdownList");
     });
 
     breakdownWindow.on('beforeunload', () =>{
-//console.log("updating breakdown details");
         breakdownWindow.webContents.send("updateBreakdownDetails");
     });
 
@@ -396,9 +388,8 @@ function createAlertWindow(message){
         slashes: true
     }));
 
-    if (isdev === true){
-       //alertWindow.webContents.openDevTools();
-    }
+// uncomment for development
+//alertWindow.webContents.openDevTools();
 
     alertWindow.on('ready',() => {
         mainWindow.webContents.send('alertSetMessage',message);

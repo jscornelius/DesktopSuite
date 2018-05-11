@@ -5,7 +5,7 @@ const {ipcRenderer} = require('electron');
 const $ = require('jquery');
 
 var PrefsObject={
-    alertType: "alertTheatrical",
+    alertType: "Theatrical",
     alertCMail: true,
     alertBreakdowns: true,
     loginname:"",
@@ -37,6 +37,7 @@ function savePrefs (){
     localStorage.setItem('alertBreakdowns', $('#alertBreakdowns').is(':checked'));
     s = $('input[name="alertType"]:checked').val();
     s = s.trimLeft();
+console.log(s);
     localStorage.setItem('alertType', s);
 
     PrefsObject.alertType = s;

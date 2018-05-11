@@ -9,9 +9,9 @@ const $ = require('jquery');
 
 const moment = require('moment');
 
-//const prefsWindow = electron.remote.BrowserWindow;
-
 import * as Utils from './utils.js';
+//import * as globals from './javascript/globaldefs.js';
+
 
 var gMessageText = "";
 var gNotificationtext = "";
@@ -42,7 +42,7 @@ var UserObject = {
 };
 
 var PrefsObject={
-    alertType: "alertTheatrical",
+    alertType: "Theatrical",
     alertCMail: "true",
     alertBreakdowns: "true",
     loginname:"",
@@ -74,7 +74,7 @@ function readPrefs(){
     if (localStorage.getItem('alertType')){
         PrefsObject.alertType = localStorage.getItem('alertType');
     }else {
-        PrefsObject.alertType = 'alertTheatrical';
+        PrefsObject.alertType = 'Theatrical';
         localStorage.setItem('alertType', PrefsObject.alertType);
     }
     if (localStorage.getItem('alertCMail')){

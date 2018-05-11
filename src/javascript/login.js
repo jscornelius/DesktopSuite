@@ -14,7 +14,7 @@ var UserObject = {
 };
 
 var PrefsObject={
-    alertType: "alertTheatrical",
+    alertType: "Theatrical",
     alertCMail: "true",
     alertBreakdowns: "true",
     loginname:"",
@@ -44,7 +44,7 @@ function readPrefs(){
     if (localStorage.getItem('alertType')){
         PrefsObject.alertType = localStorage.getItem('alertType');
     }else {
-        PrefsObject.alertType = 'alertTheatrical';
+        PrefsObject.alertType = 'Theatrical';
         localStorage.setItem('alertType', PrefsObject.alertType);
     }
     if (localStorage.getItem('alertCMail')){

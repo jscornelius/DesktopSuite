@@ -6,6 +6,8 @@ const {shell} = require('electron');
 const $ = require('jquery');
 const moment = require('moment');
 import * as Utils from './utils.js';
+//import * as globals from './javascript/globaldefs.js';
+
 
 var breakdownDetails = [];
 
