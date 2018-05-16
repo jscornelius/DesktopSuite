@@ -6,8 +6,6 @@ const {shell} = require('electron');
 const $ = require('jquery');
 const moment = require('moment');
 import * as Utils from './utils.js';
-//import * as globals from './javascript/globaldefs.js';
-
 
 var breakdownDetails = [];
 
@@ -92,8 +90,12 @@ function addListItem(breakdownDetail, alertType){
     var line = document.getElementById(breakdownDetail.breakdown_id);
     if (line) return false;
 
-    if (breakdownDetail.breakdown_type_summary != alertType) return false;
+    if (alertType == 'All'){
 
+    }else{
+        if (breakdownDetail.breakdown_type_summary != alertType) return false;
+    }
+    
     var ul = document.getElementById("breakdown-list");
     var li = document.createElement("li");
     li.setAttribute('id',breakdownDetail.breakdown_id);

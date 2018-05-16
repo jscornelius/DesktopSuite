@@ -5,9 +5,10 @@ const {ipcRenderer} = require('electron');
 const $ = require('jquery');
 
 var PrefsObject={
-    alertType: "Theatrical",
+    alertType: "All",
     alertCMail: true,
     alertBreakdowns: true,
+    docked: true,
     loginname:"",
     password:""
 };
@@ -37,7 +38,6 @@ function savePrefs (){
     localStorage.setItem('alertBreakdowns', $('#alertBreakdowns').is(':checked'));
     s = $('input[name="alertType"]:checked').val();
     s = s.trimLeft();
-console.log(s);
     localStorage.setItem('alertType', s);
 
     PrefsObject.alertType = s;
@@ -54,7 +54,7 @@ function readPrefs (){
     if (localStorage.getItem('alertType')){
         s = localStorage.getItem('alertType');
         s = s.trimLeft();
-        foo = "input:radio[id=alert"+s+"]";
+        foo = "input:radio[id="+s+"]";
         $(foo).prop("checked",true);
     }
     $('#alertCMail').prop('checked',(localStorage.getItem('alertCMail') == 'true'));
@@ -66,6 +66,7 @@ function readPrefs (){
     PrefsObject.alertType = s;
     PrefsObject.alertCMail = (localStorage.getItem('alertCMail') == 'true');
     PrefsObject.alertBreakdowns = (localStorage.getItem('alertBreakdowns') == 'true');
+    PrefsObject.docked = true;
 
 
     ipcRenderer.send('refreshPrefs', PrefsObject);

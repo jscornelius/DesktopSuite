@@ -10,17 +10,15 @@ const $ = require('jquery');
 const moment = require('moment');
 
 import * as Utils from './utils.js';
-//import * as globals from './javascript/globaldefs.js';
-
-
-var gMessageText = "";
-var gNotificationtext = "";
-var gNotify = false;
 
 var globalTimer = "";
 var alertTimer;
 
+var cmailSectionHeight = 50;
+var breakdownSectionHeight = 50;
+
 var firstRun = true;
+var resize=false;
 
 var UserType={
     "CMailOnly":0,
@@ -30,21 +28,22 @@ var UserType={
 
 var thisUserType;
 
-var lastCount=[0,0,0,0,0,0];
-var newCount=[0,0,0,0,0,0];
+var lastCMailCount = 0;
+var CMailCount = 0;
 
 var UserObject = {
     loginname:"",
     password:"",
-    getCMail:false,
-    getBreakdowns:false,
+    getCMail:true,
+    getBreakdowns:true,
     getFromDate:""
 };
 
 var PrefsObject={
-    alertType: "Theatrical",
+    alertType: "All",
     alertCMail: "true",
     alertBreakdowns: "true",
+    docked: true,
     loginname:"",
     password:""
 };
@@ -61,12 +60,6 @@ import * as BreakdownController from './breakdown-controller.js';
 ConfigController.init("http://webservices.breakdownexpress.com/ds/_getAllConfigurationSettings.cfm");
 CMailController.init("http://webservices.breakdownexpress.com/ds/_getCmail.cfm");
 BreakdownController.init("http://webservices.breakdownexpress.com/ds/_getBreakdowns.cfm");
-
-/*
-ConfigController.init("http://dev-webservices.breakdownexpress.com/ds/_getAllConfigurationSettings.cfm");
-CMailController.init("http://dev-webservices.breakdownexpress.com/ds/_getCmail.cfm");
-BreakdownController.init("http://dev-webservices.breakdownexpress.com/ds/_getBreakdowns.cfm");
-*/
 
 //--------------------
 // read prefs into PrefsObject
@@ -97,23 +90,37 @@ function readPrefs(){
 //--------------------
 // set visibility of fields by contents PrefsObject
 function applyPrefs(){
+    var breakdownVisible = (UserObject.getBreakdowns && PrefsObject.alertBreakdowns);
+    var cmailVisible = (UserObject.getCMail && PrefsObject.alertCMail);
 
-    if (PrefsObject.alertBreakdowns == false){
-        $('#breakdown-group').addClass('hidden');
+    if(resize){
+        resizer('#cmail-group',1);
+        resizer('#breakdown-group',1);
     }
-    else {
-        if (UserObject.getBreakdowns){
-            getDataForUser(UserType.BreakdownOnly);
+
+    if (breakdownVisible){ // show breakdown
+        $('#breakdown-group').show();
+        if (cmailVisible){ // show cmail
+            $('#breakdown-group').css('grid-row', '2');
+            $('#breakdown-group').css('margin','0px 10px 10px 10px');
+
+            $('#cmail-group').css('grid-row', '1');
+            $('#cmail-group').css('margin', '10px 10px 0px 10px');
+            $('#cmail-group').show();
+        }else{ // or, only show breakdown
+            $('#cmail-group').hide();
+            $('#breakdown-group').show();
+            $('#breakdown-group').css('grid-row', '1/3');
+            $('#breakdown-group').css('margin','10px 10px 10px 10px');
         }
+    }else{ // no breakdown, show cmail
+        $('#breakdown-group').hide();
+        $('#cmail-group').show();
+        $('#cmail-group').css('grid-row', '1/3');
+        $('#cmail-group').css('margin', '10px 10px 10px 10px');
+        $('#content').css('grid-template-rows', '1');
     }
-    if (PrefsObject.alertCMail == false){
-        if (PrefsObject.alertBreakdowns == true){ // don't hide cmail if they've already hidden breakdowns.  That would be silly
-            $('#cmail-group').addClass('hidden');
-        }
-    }
-    else {
-        getDataForUser(UserType.CMailOnly);
-    }
+
 }
 
 //--------------------
@@ -124,28 +131,20 @@ function displayMessage(message){
 
 //--------------------
 // send a system notification
-function sendNotification(body) {
-    if(gNotify === true){
-        new Notification('Breakdown Services Desktop Suite', { body });
-        alertSound.play();
-    }
-    gNotify = false;
+function sendNotification(message) {
+    new Notification('Breakdown Services Desktop Suite', { body: message });
+    alertSound.play();
 }
 
 //--------------------
 // this may not be necessary
 function userHasLoggedOut(){
-    gNotificationtext = "";
+
 }
 
 //--------------------
 // MAIN LOOP MAIN LOOP MAIN LOOP!!!
 ipcRenderer.on('beginMainLoop', (event,arg) =>{
-
-    firstRun = true;
-    readPrefs();
-    applyPrefs();
-
     UserObject = arg;
     getUserConfig(UserObject);
     if (UserObject.getBreakdowns === true){
@@ -153,10 +152,13 @@ ipcRenderer.on('beginMainLoop', (event,arg) =>{
     }else {
         thisUserType = UserType.CMailOnly;
     }
+    firstRun = true;
+    readPrefs();
+    applyPrefs();
+    CMailCount = 0;
     getDataForUser(thisUserType);
 
     globalTimer = setInterval(() => getDataForUser(thisUserType),24000);
-
 });
 
 //--------------------
@@ -182,58 +184,27 @@ ipcRenderer.on('menuCheckForCMail', (event,arg) =>{
 ipcRenderer.on('prefsUpdated', (event,arg) =>{
     readPrefs();
     applyPrefs();
+    getDataForUser(UserType.Both);
 });
 
 //--------------------
 ipcRenderer.on('updateNewBreakdownCount', (event,arg) =>{
-    $("[id='breakdowncircle']").addClass('hidden');
-    gNotificationtext = "";
-    gNotify = false;
 });
 
 //--------------------
 // called by timer to get data for this user
 function getDataForUser(which){
-    var breakdownVisible = (UserObject.getBreakdowns && PrefsObject.alertBreakdowns);
-    var cmailVisible = (UserObject.getCMail && PrefsObject.alertCMail);
-
-    if (breakdownVisible){
-        $('#breakdown-group').removeClass('hidden');
-        $('#breakdown-group').addClass('breakdown-group');
-            if (cmailVisible){
-            //$('#breakdown-group').removeClass('hidden');
-            //$('#breakdown-group').addClass('breakdown-group');
-                $('#breakdown-group').css('grid-row', '2');
-                $('#cmail-group').removeClass('hidden');
-                $('#cmail-group').addClass('cmail-group');
-                $('#cmail-group').css('grid-row', '1');
-            }else{
-                $('#breakdown-group').css('grid-row', '1/3');
-            }
-    }else{
-        $('#breakdown-group').addClass('hidden');
-        $('#cmail-group').removeClass('hidden');
-        $('#cmail-group').addClass('cmail-group');
-        $('#cmail-group').css('grid-row', '1/3');
-        $('#content').css('grid-template-rows', '1');
-    }
-
     if ((which == UserType.BreakdownOnly) || (which == UserType.Both)){
         if (UserObject.getBreakdowns && PrefsObject.alertBreakdowns){
             getBreakdowns(UserObject);
-        }else {
-
         }
     }
 
     if ((which == UserType.CMailOnly) || (which == UserType.Both)){
         if(UserObject.getCMail && PrefsObject.alertCMail){
             getCMailCount(UserObject);
-        }else {
-
         }
     }
-    sendNotification(gNotificationtext);
 }
 
 //--------------------
@@ -247,42 +218,72 @@ function getUserConfig(UO){//loginname,password){
         }
   });
 }
+//--------------------
+// resize window and sections
+function resizer(section, size){
+    //return;
 
+    if (size == 1){
+        size = 60;
+    }
+
+    $(section).animate({height: size},1000, function(){
+        var b = $('#breakdown-group').height();
+        var c = $('#cmail-group').height();
+        if (b < 60){
+            if (c < 60){
+                ipcRenderer.send('resizeMainWindow', 25);
+            }
+            else{
+                ipcRenderer.send('resizeMainWindow', 92);
+            }
+        }
+        else{
+            ipcRenderer.send('resizeMainWindow', 172);
+        }
+    });
+}
 //--------------------
 // get Cmail list
 function getCMailCount(UO){
-//console.log("getCMailCount");
     var CMails = [];
-    var CMailCount = 0;
     var newCMailCount = 0;
+    var CMailText = "";
 
     CMailController.getCMailCount(UO.loginname,UO.password,function(err,response){
         if (!err){
-            var lastCount=CMailCount;
+            lastCMailCount=CMailCount;
             CMails = response.CMails.clone();
             CMailCount = CMails.length;
-            if (firstRun){
-                //firstRun = false;
-            }else {
-                if (lastCount >0){
-                    if (lastCount < CMailCount){
 
-                        $("[id='cmailcircle']").removeClass('hidden');
-                        newCMailCount = CMailCount - lastCount;
-                        gNotificationtext = newCMailCount + " new CMail messages\n";
-                        gNotify = true;
+                if (lastCMailCount >0){
+                    if (CMailCount > lastCMailCount){
+                        newCMailCount = CMailCount - lastCMailCount;
+                        CMailText = newCMailCount;
+
+                        if(resize){
+                            resizer('#cmail-group',1);
+                        }
+                        $('#CMailNew').html(CMailText);
+                        $('#CMailGroupHeader').html("New CMail");
+                        sendNotification(newCMailCount + " new CMail\n");
                     }
+                    else {
+                        if(resize){
+                            resizer('#cmail-group',0);
+                            $('#CMailNew').html("");
+                            $('#CMailGroupHeader').html("New CMail");
+                        }else{
+                            $('#CMailNew').html("No ");
+                            $('#CMailGroupHeader').html("New CMail");
+                        }
+                    }
+                }else{
+                    $('#CMailNew').html("No ");
+                    $('#CMailGroupHeader').html("New CMail");
                 }
-            }
-            $('#CMailCount').html(CMailCount);
-            $('#CMailNew').html(newCMailCount);
             ipcRenderer.send('updateCMailMenuCount', CMailCount);
         }else{
-            CMails = "";
-            CMailCount = 0;
-            newCMailCount = 0;
-            $('#CMailCount').html(CMailCount);
-            $('#CMailNew').html(newCMailCount);
             console.log("error: unable to get cmails");
         }
   });
@@ -290,16 +291,15 @@ function getCMailCount(UO){
 //--------------------
 // get breakdown list
 function getBreakdowns(UO){//loginname,password,getFromDate){
-//console.log("getBreakdowns");
-    var checkForNew = "";
     var displayValue;
     var displayTitle = "Theatrical Breakdowns:";
     var Breakdowns=[];
-    var breakdownDetails =[];
     var breakdownCount = 0;
     var newBreakdownCount = 0;
     var alertCount = 0;
+    var breakdownText;
 
+    updateBreakdownDetailsLocalStorage();
     BreakdownController.getBreakdownList(UO.loginname,UO.password,UO.getFromDate,function(err,response){
         if (!err){
 
@@ -313,7 +313,7 @@ function getBreakdowns(UO){//loginname,password,getFromDate){
             breakdownCount = 0;
             alertCount = 0;
             breakdownDetails.forEach(function(b){
-                if (b.breakdown_type_summary == PrefsObject.alertType){
+                if ((PrefsObject.alertType == "All") || (b.breakdown_type_summary == PrefsObject.alertType)){
                     breakdownCount+=1;
                     if (b.isnew == true){
                         newBreakdownCount+=1;
@@ -326,34 +326,39 @@ function getBreakdowns(UO){//loginname,password,getFromDate){
             });
             if (newBreakdownCount > 0) {// this means we have another breakdown released
                 $('#breakdownNew').html(newBreakdownCount);
-                $("[id='breakdowncircle']").removeClass('hidden');
 
-                gNotificationtext = "New breakdowns:" + newBreakdownCount + "\n";
-                if (alertCount > 0){
-                    gNotify = true;
+                breakdownText = " New Breakdowns";
+                if (newBreakdownCount == 1)
+                {
+                    breakdownText = " New Breakdown";
                 }
 
-                // mark these as no longer new, since we've seen them
-                //updateBreakdownDetailsLocalStorage();
+                $('#BreakdownGroupHeader').html(breakdownText);
+                if (alertCount > 0){
+                    if (resize){
+                        resizer('#breakdown-group',1);
+                    }
+                    sendNotification(newBreakdownCount + breakdownText);
+                }
             }
             else{
-                $("[id='breakdowncircle']").addClass('hidden');
-                gNotificationtext = "";
-                gNotify = false;
-            }
+                if (resize){
+                    resizer('#breakdown-group',0);
+                    $('#breakdownNew').html("");
+                    $('#BreakdownGroupHeader').html("");
+                }else{
+                    $('#breakdownNew').html("No ");
+                    $('#BreakdownGroupHeader').html("New Breakdowns");
+                }
 
-            $('#breakdownCount').html(breakdownCount);
-            ipcRenderer.send('_updateBreakdownMenuCount', newBreakdownCount);
+            }
+            ipcRenderer.send('_updateBreakdownMenuCount', breakdownCount);
             ipcRenderer.send('_updateBreakdownList', "");
+
         }else{
-            Breakdowns = "";
-            BreakdownCount = 0;
-            newBreakdownCount = 0;
-            $('#breakdownCount').html(BreakdownCount);
-            $('#breakdownNew').html(newBreakdownCount);
             console.log("error: unable to get breakdowns");
         }
-  });
+    });
 }
 
 function updateAlertStatus(breakdownID){
@@ -386,7 +391,7 @@ function updateBreakdownDetailsLocalStorage(){
     breakdownDetails = JSON.parse(localStorageBreakdownList);
 
     for (bd of breakdownDetails){
-        if (bd.breakdown_type_summary == alertType) {
+        if ((alertType == 'All') || (bd.breakdown_type_summary == alertType)) {
             bd.isnew = false;
         }
     }

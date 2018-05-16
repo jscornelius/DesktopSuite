@@ -17,6 +17,7 @@ var PrefsObject={
     alertType: "Theatrical",
     alertCMail: "true",
     alertBreakdowns: "true",
+    docked: true,
     loginname:"",
     password:""
 };
@@ -120,8 +121,8 @@ $('#login-button').on('click', function(){
                     localStorage.setItem('loginname', "");
                     localStorage.setItem('password', "");
                 }
-                readPrefs();
-                ipcRenderer.send('refreshPrefs', PrefsObject);
+//                readPrefs();
+//                ipcRenderer.send('refreshPrefs', PrefsObject);
                 // pass the UserObject back to Main
                 ipcRenderer.send('userIsLoggedIn', UserObject);
             }else { //

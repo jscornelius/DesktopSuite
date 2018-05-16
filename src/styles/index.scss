@@ -30,6 +30,13 @@ $buttonColor: #33AD22;
 $defaultGridColorA:#E6E6E6;//#547aa4;
 $defaultGridColorB:#c1c1c1;//#546d96;
 
+$breakdownOrange: #ff7900;
+$ecocastGreen: #28d514;
+$darkerGreen: #115b08;
+$ecocastBlue: #092c4d;
+$ecocastLightBlue: #8498b3;
+$ecocastDeepBlue: #002033;
+
 $padding:8px;
 
 @function rem-calc($pixels, $context: $baseFontSize) {
@@ -49,7 +56,7 @@ $padding:8px;
 //  src: url('../assets/fonts/Roboto-Regular.woff') format('woff2');
 //}
 .hidden {
-  display: none !important;
+  display: none;
 }
 html{
     height:100%;
@@ -189,10 +196,10 @@ button {
         align-items:center;
         justify-items: center;
 
-        grid-template-columns: 1.5fr 1fr;
+        grid-template-columns: 1fr;
         grid-template-rows: 1fr;
 
-        background-color: $panelColor;
+        background-color: $darkerGreen;
         border-radius: 5px;
 
     }
@@ -205,15 +212,15 @@ button {
         align-items:center;
         justify-items: center;
 
-        grid-template-columns: 1.5fr 1fr;
+        grid-template-columns: 1fr;
         grid-template-rows: 1fr;
-        background-color: $panelColor;
+        background-color: $ecocastBlue;
         border-radius: 5px;
     }
 
     .sectiontitle{
-        justify-self: right;
-        grid-column: 1;
+        justify-self: left;
+        grid-column: 2;
         grid-row: 1;
     }
     .countvalue{
@@ -221,17 +228,17 @@ button {
         grid-row: 1;
     }
     .newcountvalue{
-        margin-left: rem-calc(22px);
-        margin-top: rem-calc(1px);
-        margin-bottom: rem-calc(7px);
+//        margin-left: rem-calc(22px);
+//        margin-top: rem-calc(1px);
+//        margin-bottom: rem-calc(7px);
 
-        font-size: 10px;
+        //font-size: 10px;
         color:#fff;
-        grid-column:2;
+        grid-column:1;
         grid-row: 1;
     }
 
-    .numberCircle {
+/*    .numberCircle {
         margin-left: rem-calc(22px);
         margin-top: rem-calc(1px);
         margin-bottom: rem-calc(7px);
@@ -247,7 +254,7 @@ button {
         text-align:center;
         line-height: 10px;
     }
-
+*/
 }
 .listcontent{
     height: 100%;
@@ -367,16 +374,21 @@ button {
                 grid-gap: 10px;
                 margin: rem-calc($padding);
 
-                .alert-theatrical{
+                .alert-all{
                     grid-row: 1;
                     grid-column:2;
                 }
-                .alert-commercial{
+
+                .alert-theatrical{
                     grid-row: 2;
                     grid-column:2;
                 }
-                .alert-stage{
+                .alert-commercial{
                     grid-row: 3;
+                    grid-column:2;
+                }
+                .alert-stage{
+                    grid-row: 4;
                     grid-column:2;
                 }
             }

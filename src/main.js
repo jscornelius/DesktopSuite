@@ -4,14 +4,14 @@ const electron = require('electron');
 const app = electron.app;
 const url = require('url');
 const path = require('path');
-const {shell} = require('electron');
+//const {shell} = require('electron');
 const {Menu} = require('electron');
 
 const { ipcMain } = require('electron');
 
 var gIsUserAuthenticated = false;
 
-var UserObject = {
+let UserObject = {
     loginname:"",
     password:"",
     getCMail:false,
@@ -23,6 +23,7 @@ var PrefsObject={
     alertType: "Theatrical",
     alertCMail: true,
     alertBreakdowns: true,
+    docked: true,
     loginname:"",
     password:""
 };
@@ -81,9 +82,9 @@ function createMenus(breakdownCount,CMailCount){
     var breakdownCountLabel;
     var CMailCountLabel;
     if (breakdownCount == -1){
-        breakdownCountLabel = getMenuItem('new breakdowns').label;
+        breakdownCountLabel = getMenuItem(' breakdowns').label;
     }else {
-        breakdownCountLabel = breakdownCount + ' new breakdowns';
+        breakdownCountLabel = breakdownCount + ' breakdowns';
     }
     if (CMailCount == -1){
         CMailCountLabel = getMenuItem('unread messages').label;
@@ -187,8 +188,8 @@ function setMenuLoggedIn(how){
     var breakdownMenus = (UserObject.getBreakdowns && PrefsObject.alertBreakdowns);
     var cmailMenus = (UserObject.getCMail && PrefsObject.alertCMail);
 
-    getMenuItem('new breakdowns').enabled = how;
-    getMenuItem('new breakdowns').visible = how;
+    getMenuItem(' breakdowns').enabled = how;
+    getMenuItem(' breakdowns').visible = how;
     getMenuItem('unread messages').enabled = how;
     getMenuItem('unread messages').visible = how;
 
@@ -198,8 +199,8 @@ function setMenuLoggedIn(how){
         getMenuItem('View Current Breakdowns').enabled = how;
         getMenuItem('View Current Breakdowns').visible = how;
     }else {
-        getMenuItem('new breakdowns').enabled = false;
-        getMenuItem('new breakdowns').visible = false;
+        getMenuItem(' breakdowns').enabled = false;
+        getMenuItem(' breakdowns').visible = false;
         getMenuItem('Check for new Breakdowns').enabled = false;
         getMenuItem('Check for new Breakdowns').visible = false;
         getMenuItem('View Current Breakdowns').enabled = false;
@@ -239,12 +240,18 @@ function setMenuLoggedIn(how){
 //--------------------------------//--------------------------------//--------------------------------
 // main window
 function createMainWindow() {
+    const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+    var xpos = width - 200;
+    var ypos = 0;//height - 150;
+
     mainWindow =  new electron.BrowserWindow({
-        width: 300 ,
+        width: 200 ,
         height: 150,
+        x: xpos,
+        y: ypos,
+        //frame: false,
         icon: path.join(__dirname, 'assets/icons/png/64x64.png')
     });
-
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, '.','content.html'),
@@ -286,7 +293,7 @@ function createPrefsWindow(){
 
     prefsWindow =  new electron.BrowserWindow({
         width: 375 ,
-        height: 180,
+        height: 200,
         //frame: false
     });
 
@@ -297,7 +304,7 @@ function createPrefsWindow(){
     }));
 
 // uncomment for development
-//prefsWindow.webContents.openDevTools();
+if (isdev){prefsWindow.webContents.openDevTools();}
 
     prefsWindow.on('closed', () => {
         prefsWindow = null;
@@ -459,6 +466,7 @@ ipcMain.on('createLoginWindow', (event,arg) =>{
 });
 ipcMain.on('userIsLoggedIn', (event,arg) =>{
     UserObject = arg;
+//console.log(UserObject);
     gIsUserAuthenticated = true;
     loginWindow.close();
     mainWindow.show();
@@ -505,7 +513,9 @@ ipcMain.on('_updateNewBreakdownCount', (event,arg) =>{
 
 //-- resize the main window
 ipcMain.on('resizeMainWindow', (event,arg) =>{
-    var sizeObject = arg;
+    var sz = mainWindow.getSize();
+    var h = sz[1];
+    var w = sz[0];
 
-    mainWindow.setSize(arg.width,arg.height);
+    mainWindow.setSize(w,arg);
 });
