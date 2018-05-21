@@ -180,6 +180,22 @@ ipcRenderer.on('menuCheckForCMail', (event,arg) =>{
     getDataForUser(UserType.CMailOnly);
 });
 
+$('#viewbreakdown').on('click', function(){
+    ipcRenderer.send('createBreakdownWindow', "");
+});
+$('#viewcmail').on('click', function(){
+    ipcRenderer.send('viewCmails', "");
+});
+$('#refreshbreakdown').on('click', function(){
+    if (UserObject.getBreakdowns){
+        getDataForUser(UserType.BreakdownOnly);
+    }
+    //console.log("clickity click refreshbreakdown");
+});
+$('#refreshcmail').on('click', function(){
+    getDataForUser(UserType.CMailOnly);
+    //console.log("clickity click refreshcmail");
+});
 //--------------------
 ipcRenderer.on('prefsUpdated', (event,arg) =>{
     readPrefs();
@@ -196,12 +212,16 @@ ipcRenderer.on('updateNewBreakdownCount', (event,arg) =>{
 function getDataForUser(which){
     if ((which == UserType.BreakdownOnly) || (which == UserType.Both)){
         if (UserObject.getBreakdowns && PrefsObject.alertBreakdowns){
+            $('#breakdownNew').html("");
+            $('#BreakdownGroupHeader').html("checking for Breakdowns...");
             getBreakdowns(UserObject);
         }
     }
 
     if ((which == UserType.CMailOnly) || (which == UserType.Both)){
         if(UserObject.getCMail && PrefsObject.alertCMail){
+            $('#CMailNew').html("");
+            $('#CMailGroupHeader').html("checking for cmail...");
             getCMailCount(UserObject);
         }
     }

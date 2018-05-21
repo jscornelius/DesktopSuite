@@ -1,5 +1,5 @@
 // main js file
-var isdev=true;
+var isdev=false;
 const electron = require('electron');
 const app = electron.app;
 const url = require('url');
@@ -10,6 +10,7 @@ const {Menu} = require('electron');
 const { ipcMain } = require('electron');
 
 var gIsUserAuthenticated = false;
+var checkCMailDisable;
 
 let UserObject = {
     loginname:"",
@@ -109,7 +110,7 @@ function createMenus(breakdownCount,CMailCount){
             },
             {
                 label: CMailCountLabel,
-                click: () => electron.shell.openExternal('https://www.breakdownexpress.com/cmail/'),
+                click: () => openCMailList(),
                 enabled: true,visible: false
             },
             {
@@ -134,7 +135,7 @@ function createMenus(breakdownCount,CMailCount){
             },
             {
                 label: 'Access my CMail',
-                click: () => electron.shell.openExternal('https://www.breakdownexpress.com/cmail/'),
+                click: () => openCMailList(),
                 enabled: false, visible: true
             },
             {type: 'separator'},
@@ -233,22 +234,29 @@ function setMenuLoggedIn(how){
     }
     getMenuItem('Log in as a different user').enabled = true;
 }
-
+function openCMailList(){
+    if (checkCMailDisable == true){
+        setTimeout(function (){checkCMailDisable = false;},5000);
+    }else {
+        electron.shell.openExternal('https://www.breakdownexpress.com/cmail/');
+        checkCMailDisable = true;
+    }
+}
 //--------------------------------//--------------------------------//--------------------------------
 //--------------------------------//--------------------------------//--------------------------------
 //--------------------------------//--------------------------------//--------------------------------
 //--------------------------------//--------------------------------//--------------------------------
 // main window
 function createMainWindow() {
-    const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
-    var xpos = width - 200;
-    var ypos = 0;//height - 150;
+//    const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+//    var xpos = width - 225;
+//    var ypos = 0;//height - 150;
 
     mainWindow =  new electron.BrowserWindow({
-        width: 200 ,
+        width: 300 ,
         height: 150,
-        x: xpos,
-        y: ypos,
+//        x: xpos,
+//        y: ypos,
         //frame: false,
         icon: path.join(__dirname, 'assets/icons/png/64x64.png')
     });
@@ -261,7 +269,7 @@ function createMainWindow() {
     }));
 
 // uncomment for development
-if (isdev) mainWindow.webContents.openDevTools();
+//if (isdev) mainWindow.webContents.openDevTools();
 
     createMenus(0,0);
     setMenuLoggedIn(false);
@@ -288,6 +296,7 @@ if (isdev) mainWindow.webContents.openDevTools();
 // prefs window
 function createPrefsWindow(){
     if (prefsWindow){
+        prefsWindow.focus();
         return;
     }
 
@@ -304,7 +313,7 @@ function createPrefsWindow(){
     }));
 
 // uncomment for development
-if (isdev){prefsWindow.webContents.openDevTools();}
+//if (isdev){prefsWindow.webContents.openDevTools();}
 
     prefsWindow.on('closed', () => {
         prefsWindow = null;
@@ -315,14 +324,16 @@ if (isdev){prefsWindow.webContents.openDevTools();}
 // login window stuff
 function createLoginWindow(){
     if (loginWindow){
+        loginWindow.focus();
         return;
     }
 
     logout();
 
     loginWindow =  new electron.BrowserWindow({
-        width: 340,
-        height: 260
+        width: 350,
+        height: 270//,
+        //titleBarStyle: 'hidden'
         //frame: false
     });
 
@@ -333,11 +344,19 @@ function createLoginWindow(){
     }));
 
 // uncomment for development
-//loginWindow.webContents.openDevTools();
+//if (isdev){loginWindow.webContents.openDevTools();}
 
     loginWindow.setAlwaysOnTop(true);
+    loginWindow.on('beforeunload', () =>{
+        if (gIsUserAuthenticated == false)
+        {
+            mainWindow.close();
+            app.quit();
+        }
+    });
 
     loginWindow.on('closed', () => {
+
         loginWindow = null;
     });
 }
@@ -346,6 +365,7 @@ function createLoginWindow(){
 // breakdown window
 function createBreakdownWindow(){
     if (breakdownWindow){
+        breakdownWindow.focus();
         return;
     }
 
@@ -362,7 +382,7 @@ function createBreakdownWindow(){
     }));
 
 // uncomment for development
-//breakdownWindow.webContents.openDevTools();
+if (isdev){breakdownWindow.webContents.openDevTools();}
 
     breakdownWindow.webContents.on('did-finish-load', () => {
         breakdownWindow.webContents.send("updateBreakdownList");
@@ -381,6 +401,7 @@ function createBreakdownWindow(){
 // alerts window stuff
 function createAlertWindow(message){
     if (alertWindow){
+        alertWindow.focus();
         return;
     }
     alertWindow =  new electron.BrowserWindow({
@@ -438,7 +459,12 @@ ipcMain.on('_updateBreakdownList', (event,arg) =>{
         breakdownWindow.webContents.send("updateBreakdownList");
     }
 });
-
+ipcMain.on('createBreakdownWindow', (event,arg) =>{
+    createBreakdownWindow();
+});
+ipcMain.on('viewCmails', (event,arg) =>{
+    openCMailList();
+});
 //-- prefs
 ipcMain.on('createPrefsWindow', (event,arg) =>{
     createPrefsWindow();

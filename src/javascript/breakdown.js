@@ -8,6 +8,8 @@ const moment = require('moment');
 import * as Utils from './utils.js';
 
 var breakdownDetails = [];
+var breakdownIDLastOpened;
+var openBreakdownDisabled;
 
 function bd(id,type,summary,name,date,title,isnew,alerted){
     this.breakdown_id = id;
@@ -82,7 +84,13 @@ function clearBreakdownList(){
 }
 
 export function browseToBreakdown(breakdownID){
-    shell.openExternal('https://www.breakdownexpress.com//projects/?view=breakdowns&action=details&breakdown=' + breakdownID);
+    if ((breakdownID == breakdownIDLastOpened) && (openBreakdownDisabled == true)){
+            setTimeout(function (){openBreakdownDisabled = false;},3000);
+    }else {
+        shell.openExternal('https://www.breakdownexpress.com/projects/?view=breakdowns&action=details&breakdown=' + breakdownID);
+        openBreakdownDisabled = true;
+    }
+    breakdownIDLastOpened = breakdownID;
 }
 
 function addListItem(breakdownDetail, alertType){
@@ -95,7 +103,7 @@ function addListItem(breakdownDetail, alertType){
     }else{
         if (breakdownDetail.breakdown_type_summary != alertType) return false;
     }
-    
+
     var ul = document.getElementById("breakdown-list");
     var li = document.createElement("li");
     li.setAttribute('id',breakdownDetail.breakdown_id);
