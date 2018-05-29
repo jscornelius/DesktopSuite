@@ -44,6 +44,7 @@ function readBreakdownDetails(getFromDate){
 
         if (comparedate != getFromDate){
             breakdownDetails = [];
+            writeBreakdownDetailsToLocalStorage();
             return;
         }
         else {

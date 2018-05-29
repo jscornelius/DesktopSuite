@@ -8,6 +8,8 @@ const path = require('path');
 const {Menu} = require('electron');
 
 const { ipcMain } = require('electron');
+const windowStateKeeper = require('electron-window-state');
+
 
 var gIsUserAuthenticated = false;
 var checkCMailDisable;
@@ -29,6 +31,10 @@ var PrefsObject={
     password:""
 };
 
+let mainWindowState;
+let prefsWindowState;
+let breakdownWindowState;
+
 //--------------------------------
 // window stuff
 let mainWindow="";
@@ -39,6 +45,8 @@ let breakdownWindow="";
 
 let mainMenu;
 let menuItem;
+
+//console.log(app.getPath('userData'));
 
 function logout(){
     UserObject = {
@@ -252,14 +260,21 @@ function createMainWindow() {
 //    var xpos = width - 225;
 //    var ypos = 0;//height - 150;
 
-    mainWindow =  new electron.BrowserWindow({
-        width: 300 ,
-        height: 150,
-//        x: xpos,
-//        y: ypos,
-        //frame: false,
-        icon: path.join(__dirname, 'assets/icons/png/64x64.png')
+    mainWindowState = windowStateKeeper({
+        defaultWidth: 375,
+        defaultHeight: 200,
+        file:"mainWindowState.json"
     });
+
+    mainWindow =  new electron.BrowserWindow({
+        icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height
+    });
+
+    mainWindowState.manage(mainWindow);
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, '.','content.html'),
@@ -300,11 +315,21 @@ function createPrefsWindow(){
         return;
     }
 
+    prefsWindowState = windowStateKeeper({
+        defaultWidth: 375,
+        defaultHeight: 200,
+        file:"prefsWindowState.json"
+    });
+
     prefsWindow =  new electron.BrowserWindow({
-        width: 375 ,
-        height: 200,
+        x: prefsWindowState.x,
+        y: prefsWindowState.y,
+        width: prefsWindowState.width,
+        height: prefsWindowState.height
         //frame: false
     });
+
+    prefsWindowState.manage(prefsWindow);
 
     prefsWindow.loadURL(url.format({
         pathname: path.join(__dirname, '.','prefs.html'),
@@ -369,11 +394,22 @@ function createBreakdownWindow(){
         return;
     }
 
+    breakdownWindowState = windowStateKeeper({
+        defaultWidth: 800,
+        defaultHeight: 500,
+        file: "breakdownWindowState.json"
+
+    });
+
     breakdownWindow =  new electron.BrowserWindow({
-        width: 800 ,
-        height: 500,
+        x: breakdownWindowState.x,
+        y: breakdownWindowState.y,
+        width: breakdownWindowState.width,
+        height: breakdownWindowState.height
         //frame: false
     });
+
+    breakdownWindowState.manage(breakdownWindow);
 
     breakdownWindow.loadURL(url.format({
         pathname: path.join(__dirname, '.','breakdown.html'),
