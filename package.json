@@ -40,23 +40,9 @@
         "build": {
             "appId": "DesktopSuite",
             "category": "DesktopSuite",
-            "dmg": {
-                "contents": [
-                {
-                    "x": 110,
-                    "y": 150
-                },
-                {
-                    "x": 240,
-                    "y": 150,
-                    "type": "link",
-                    "path": "/Applications"
-                }
-                ]
-            },
             "win": {
                 "target": "squirrel",
-                "icon": "assets/icons/win/icon.ico"
+                "icon": "./src/assets/icons/win/icon.ico"
             }
         },
         "forge": {
