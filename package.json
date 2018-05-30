@@ -54,15 +54,10 @@
                 ]
             },
             "win": {
-                "target": "NSIS",
+                "target": "squirrel",
                 "icon": "assets/icons/win/icon.ico"
             }
         },
-        "dependencies": {},
-        "devDependencies": {
-            "electron": "latest",
-            "electron-builder": "latest"
-        }
         "forge": {
             "make_targets": {
                 "win32": [
