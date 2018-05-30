@@ -3,7 +3,7 @@ const {ipcRenderer} = require('electron');
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
-const {Howl} = require('howler');
+//const {Howl} = require('howler');
 
 const $ = require('jquery');
 
@@ -50,7 +50,7 @@ var PrefsObject={
 
 var breakdownDetails=[];
 
-var alertSound = new Howl({ src: ['./assets/sounds/lowping.mp3'] });
+//var alertSound = new Howl({ src: ['./assets/sounds/lowping.mp3'] });
 
 import * as ConfigController from './config-controller.js';
 import * as CMailController from './cmail-controller.js';
@@ -133,7 +133,7 @@ function displayMessage(message){
 // send a system notification
 function sendNotification(message) {
     new Notification('Breakdown Services Desktop Suite', { body: message });
-    alertSound.play();
+    //alertSound.play();
 }
 
 //--------------------
