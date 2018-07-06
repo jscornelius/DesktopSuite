@@ -1,6 +1,0 @@
-flatten-packages on windows :
-    npm install -g flatten-packages
-    flatten-packages
-This should eliminate the "deep nested" issues
-
-Mac build "npm run make" works pretty reliably

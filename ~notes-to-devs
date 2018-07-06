@@ -3,3 +3,5 @@ flatten-packages on windows :
     flatten-packages
 
 This should eliminate the "deep nested" issues
+
+npm run make : don't run the windows build script, for some reason it won't style the html
