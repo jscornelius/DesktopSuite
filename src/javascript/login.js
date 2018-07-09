@@ -3,7 +3,7 @@ const electron = require('electron');
 const $ = require('jquery');
 const moment = require('moment');
 
-import * as Utils from './utils.js';
+//import * as Utils from './utils.js';
 
 var UserObject = {
     loginname:"",
@@ -28,6 +28,8 @@ import * as LoginController from './login-controller.js';
 
 LoginController.init("https://webservices.breakdownexpress.com/ds/_authenticateUser.cfm");
 //LoginController.init("http://dev-webservices.breakdownexpress.com/ds/_authenticateUser.cfm");
+
+console.log("display message ");
 
 displayMessage("");
 
