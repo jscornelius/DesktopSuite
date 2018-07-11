@@ -48,7 +48,8 @@
         "forge": {
             "make_targets": {
                 "win32": [
-                    "squirrel"
+                    "squirrel",
+                    "appx"
                 ],
                 "darwin": [
                     "zip",
@@ -67,7 +68,7 @@
                 "setupIcon": "./src/assets/icons/win/icon.ico"
             },
             "windowsStoreConfig": {
-                "packageName": "",
+                "packageName": "DesktopSuite",
                 "name": "DesktopSuite"
             }
         }
