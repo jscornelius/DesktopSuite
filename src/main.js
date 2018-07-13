@@ -304,6 +304,8 @@ function createMainWindow() {
             breakdownWindow.close();
         }
         mainWindow = null;
+        app.quit();
+
     });
 }
 
